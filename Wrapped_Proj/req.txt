@@ -1,0 +1,3 @@
+doango-debug-toolbar
+django-allauth
+python-decouple

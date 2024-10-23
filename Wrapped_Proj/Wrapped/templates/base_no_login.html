@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Django App{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>My Django App</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home_redirect' %}">Home</a></li>
+                <!-- Add more links as needed -->
+                {% if user.is_authenticated %}
+                    {#<li><a href="{% url 'account_logout' %}">Log Out</a></li>#}
+                {% else %}
+                    {#<li><a href="{% url 'account_login' %}">Log In</a></li>#}
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        {% block content %}
+        <!-- Page-specific content will go here -->
+        {% endblock %}
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Wrapped</p>
+    </footer>
+</body>
+</html>
