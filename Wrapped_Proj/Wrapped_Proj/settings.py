@@ -15,8 +15,10 @@ import os
 from decouple import config
 
 
-
+SPOTIFY_CLIENT_ID = config('SPOTIFY_CLIENT_ID')
+SPOTIFY_CLIENT_SECRET = config('SPOTIFY_CLIENT_SECRET')
 SECRET_KEY = config('SECRET_KEY')
+SPOTIFY_REDIRECT_URI = 'http://127.0.0.1:8000/spotify/callback/'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -85,8 +87,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SITE_ID = 1
 
 # Configure Allauth settings
-LOGIN_REDIRECT_URL = '/'  # Redirect to home after login
-LOGOUT_REDIRECT_URL = '/'  # Redirect to home after logout
+LOGIN_URL = '/spotify/login/'  # Direct users to Spotify login
+LOGIN_REDIRECT_URL = 'home_logged_in'
+LOGOUT_REDIRECT_URL = 'home_redirect'
 
 
 STATIC_URL = '/static/'
