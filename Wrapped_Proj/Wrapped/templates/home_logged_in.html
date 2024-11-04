@@ -4,6 +4,16 @@
 {% block title %}Home - Wrapped{% endblock %}
 
 {% block content %}
+
+{% if spotify_user_data %}
+    <h3>Welcome, {{ spotify_user_data.display_name }}!</h3>
+    <p>Email: {{ spotify_user_data.email }}</p>
+    <p>Country: {{ spotify_user_data.country }}</p>
+    <p>Account Type: {{ spotify_user_data.product }}</p>
+{% else %}
+    <p>No Spotify data available. <a href="{% url 'spotify_login' %}">Connect to Spotify</a></p>
+{% endif %}
+
 <h2>Spotify Wrapped logged in screen</h2>
 <p> lorem ipsum dolor sit amet </p>
 {% endblock %}
