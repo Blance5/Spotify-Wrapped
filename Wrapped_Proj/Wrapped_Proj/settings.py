@@ -93,7 +93,9 @@ LOGOUT_REDIRECT_URL = 'home_redirect'
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Ensure this path points to your "static" folder
+]
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

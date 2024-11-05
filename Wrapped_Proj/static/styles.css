@@ -37,3 +37,123 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+.carousel .carousel-control-prev-icon,
+.carousel .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5); /* Force background color */
+    background-size: 100%, 100%;
+    outline: black;
+    filter: invert(1); /* Inverts color to make it visible on white backgrounds */
+}
+
+body {
+    background-color: greenyellow; /* This should change the background color */
+}
+
+.carousel-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    height: 100vh; /* Make each slide cover the full viewport height */
+    text-align: center;
+}
+
+.carousel-item:nth-child(1) {
+    background: linear-gradient(45deg, #ff5f6d, #ffc371);
+}
+
+.carousel-item:nth-child(2) {
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+}
+
+.carousel-item:nth-child(3) {
+    background: linear-gradient(45deg, #00f260, #0575e6);
+}
+
+.carousel-item:nth-child(4) {
+    background: linear-gradient(45deg, #ff9966, #ff5e62);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.carousel-item .card {
+    animation: fadeInUp 0.8s ease;
+}
+
+.content {
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.top-list {
+    list-style: none;
+    padding: 0;
+}
+
+.top-list li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+.top-list img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+.personality-card {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 300px;
+    margin: auto;
+}
+
+.personality-card h3 {
+    font-size: 1.8rem;
+    color: #ffca28;
+}
+
+.personality-card p {
+    font-size: 1rem;
+    color: white;
+}
+
+.tags {
+    margin-top: 1rem;
+    color: #ffca28;
+    font-weight: bold;
+}
+
+#spotifyCarousel {
+    max-width: 600px; /* Limit the width of the carousel */
+    margin: 20px auto; /* Center carousel and add top/bottom margins */
+    border-radius: 15px; /* Optional: rounded corners for a cleaner look */
+    overflow: hidden; /* Ensure images don’t spill out of the rounded corners */
+}
+
+.carousel-item .content {
+    padding: 20px; /* Add some padding around the content */
+}
