@@ -28,14 +28,14 @@ SCOPES = "user-top-read playlist-read-private user-library-read user-read-email"
  #   return redirect(request, 'home.html')
 
 def spotify_login(request):
-    request.session.flush()
+    #request.session.flush()
     auth_url = "https://accounts.spotify.com/authorize"
     params = {
         "client_id": SPOTIFY_CLIENT_ID,
         "response_type": "code",
         "redirect_uri": SPOTIFY_REDIRECT_URI,
         "scope": SCOPES,
-        "show_dialog": "true",
+        #"show_dialog": "true",
     }
     url_params = urllib.parse.urlencode(params)
     return redirect(f"{auth_url}?{url_params}")
