@@ -11,9 +11,25 @@
     <!-- Bootstrap Carousel for Spotify User Data -->
     <div id="spotifyCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-            <!-- Slide 1: Top Artists -->
-            <!-- Slide 1: Top Artists -->
+            
+            <!-- Slide 4: Top Playlists -->
             <div class="carousel-item active">
+                <div class="content">
+                    <h2>Your Top Playlists</h2>
+                    <ul class="top-list" style="text-align: center;">
+                        {% for playlist in playlists %}
+                            <li style="display: flex; justify-content: center;">
+                                <span>{{ forloop.counter }}. {{ playlist.name }} - Tracks: {{ playlist.track_count }}</span>
+                            </li>
+                        {% empty %}
+                            <li>No playlist data available</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 1: Top Artists -->
+            <div class="carousel-item">
                 <div class="content">
                     <h2>Your Top Artists</h2>
                     <ul class="top-list">
@@ -48,10 +64,10 @@
             <div class="carousel-item">
                 <div class="content personality">
                     <h2>Your Listening Personality</h2>
-                    <div class="card personality-card">
+                    <div class="card personality-card" style="padding: 20px;">
                         <h3>The Adventurer</h3>
                         <p>You’re a seeker of sound. You venture out into the unknown, searching for fresher artists, deeper cuts, and tracks yet to be discovered.</p>
-                        <p class="tags">Exploration · Newness · Variety · Uniqueness</p>
+                        <p class="tags" style="color: #333;">Exploration · Newness · Variety · Uniqueness</p>
                     </div>
                 </div>
             </div>

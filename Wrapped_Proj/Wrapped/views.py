@@ -59,6 +59,10 @@ def spotify_callback(request):
 
     
     access_token = token_info.get("access_token")
+    granted_scopes = token_info.get("scope", "")  # Retrieves granted scopes as a string
+
+    # Log the granted scopes
+    print("Granted Scopes:", granted_scopes)
     if access_token:
         # Store the access token in the session
         request.session['spotify_token'] = access_token
