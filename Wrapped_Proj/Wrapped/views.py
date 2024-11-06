@@ -15,6 +15,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
 import urllib.parse
 from decouple import config
+from django.contrib.auth import login, get_user_model
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
@@ -35,13 +36,15 @@ def spotify_login(request):
         "response_type": "code",
         "redirect_uri": SPOTIFY_REDIRECT_URI,
         "scope": SCOPES,
-        #"show_dialog": "true",
+        "show_dialog": "true",
     }
     url_params = urllib.parse.urlencode(params)
     return redirect(f"{auth_url}?{url_params}")
 
 
 def spotify_callback(request):
+    request.session.set_expiry(0)  # Session expires on browser close
+
     code = request.GET.get('code')
     token_url = "https://accounts.spotify.com/api/token"
     data = {
@@ -53,12 +56,17 @@ def spotify_callback(request):
     }
     response = requests.post(token_url, data=data)
     token_info = response.json()
+
     
     access_token = token_info.get("access_token")
     if access_token:
         # Store the access token in the session
         request.session['spotify_token'] = access_token
+        request.session['is_authenticated'] = True
         print("Access token stored in session:", access_token)  # Debugging line
+        User = get_user_model()
+        user, created = User.objects.get_or_create(username="spotify_user")
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('home_logged_in')
     else:
         print("Failed to obtain access token:", token_info)  # Debugging line   
@@ -67,6 +75,9 @@ def spotify_callback(request):
 # View for logged in users
 #@login_required  # Ensures only logged in users can access this view
 def home_logged_in(request):
+
+    if not request.user.is_authenticated or 'spotify_token' not in request.session:
+        return redirect('spotify_login')
     
     access_token = request.session.get('spotify_token')
     if not access_token:
@@ -118,5 +129,6 @@ def home_redirect(request):
 
 
 def logout_view(request):
+    request.session.flush()
     logout(request)
     return redirect('home_redirect')  # Redirect to home page after logout
