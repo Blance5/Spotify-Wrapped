@@ -45,7 +45,6 @@
                 </div>
             </div>
 
-    
             <!-- Slide 2: Top Songs -->
             <div class="carousel-item">
                 <div class="content">
@@ -63,8 +62,8 @@
             <!-- Slide 3: Listening Personality -->
             <div class="carousel-item">
                 <div class="content personality">
-                    <h2>Your Listening Personality</h2>
-                    <div class="card personality-card" style="padding: 20px;">
+                    <h2 style="color: #333;">Your Listening Personality</h2>
+                    <div class="card personality-card">
                         <h3>The Adventurer</h3>
                         <p>You’re a seeker of sound. You venture out into the unknown, searching for fresher artists, deeper cuts, and tracks yet to be discovered.</p>
                         <p class="tags" style="color: #333;">Exploration · Newness · Variety · Uniqueness</p>
@@ -87,6 +86,5 @@
 {% else %}
     <p>No Spotify data available. <a href="{% url 'spotify_login' %}">Connect to Spotify</a></p>
 {% endif %}
-
 
 {% endblock %}
