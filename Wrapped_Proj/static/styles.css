@@ -1,4 +1,4 @@
-/* FoodFinder/static/styles.css */
+/* General styling for layout and colors */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -31,9 +31,175 @@ nav ul li a {
 footer {
     background-color: #333;
     color: white;
-    padding: 1rem;
+    padding: 0.5rem; /* Reduced padding */
+    font-size: 0.875rem; /* Smaller font size */
     text-align: center;
     position: fixed;
     bottom: 0;
     width: 100%;
+    line-height: 1.5; /* Adjust line height for readability */
+}
+
+
+/* Center and size carousel items */
+.carousel-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    height: 65vh; /* Restrict to 65 of the viewport height */
+    max-height: 500px; /* Maximum height limit */
+    width: 90vw;
+    max-width: 600px; /* Limit the width */
+    text-align: center;
+    padding: 20px;
+    margin: auto;
+    box-sizing: border-box;
+    overflow-y: auto; /* Allow scrolling for overflow */
+    border-radius: 15px;
+}
+
+/* Unique background gradients for each carousel item */
+.carousel-item:nth-child(1) {
+    background: linear-gradient(45deg, #ff5f6d, #ffc371);
+}
+
+.carousel-item:nth-child(2) {
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+}
+
+.carousel-item:nth-child(3) {
+    background: linear-gradient(45deg, #00c9ff, #92fe9d);
+}
+
+.carousel-item:nth-child(4) {
+    background: linear-gradient(45deg, #fddb92, #d1fdff);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.carousel-item .card {
+    animation: fadeInUp 0.8s ease;
+}
+
+/* Centering and layout for content */
+.content {
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.top-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.top-list li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+}
+
+.top-list img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+/* Responsive personality card */
+.personality-card {
+    background-color: #f3f4f6; /* Light grey background */
+    color: #000; /* Black text color */
+    padding: 1.5rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px; /* Max width */
+    margin: auto;
+    box-sizing: border-box;
+    overflow-y: auto;
+    text-align: center;
+}
+
+.personality-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.personality-card p, .tags {
+    font-size: 1rem;
+    color: #333;
+}
+
+.tags {
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+/* Centering the carousel itself */
+#spotifyCarousel {
+    max-width: 600px; /* Centered carousel with max-width */
+    margin: 20px auto;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.carousel-item .content {
+    padding: 20px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .carousel-item {
+        height: auto;
+        width: 80vw; /* Make it more compact on smaller screens */
+    }
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .top-list li {
+        font-size: 1rem;
+    }
+
+    .personality-card {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .personality-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .top-list img {
+        width: 30px;
+        height: 30px;
+    }
 }

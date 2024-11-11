@@ -13,84 +13,107 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
+import urllib.parse
+from decouple import config
+from django.contrib.auth import login, get_user_model
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
-SPOTIFY_REDIRECT_URI = "http://127.0.0.1:8000/spotify/callback"
+SPOTIFY_CLIENT_ID = config('SPOTIFY_CLIENT_ID')
+SPOTIFY_CLIENT_SECRET = config('SPOTIFY_CLIENT_SECRET')
+SPOTIFY_REDIRECT_URI = "http://127.0.0.1:8000/spotify/callback/"
 SPOTIFY_USER_PROFILE_URL = "https://api.spotify.com/v1/me"
+SCOPES = "user-top-read playlist-read-private user-library-read user-read-email"
 
 #def home_view(request):
  #   return redirect(request, 'home.html')
 
 def spotify_login(request):
-    if request.user.is_authenticated:
-        return redirect('home_logged_in')
-    # Redirect to Spotify's OAuth page
-    scopes = "user-read-email"
-    query_params = urlencode({
-        "client_id": settings.SPOTIFY_CLIENT_ID,
+    #request.session.flush()
+    auth_url = "https://accounts.spotify.com/authorize"
+    params = {
+        "client_id": SPOTIFY_CLIENT_ID,
         "response_type": "code",
-        "redirect_uri": settings.SPOTIFY_REDIRECT_URI,
-        "scope": scopes,
-    })
-    auth_url = f"{SPOTIFY_AUTH_URL}?{query_params}"
-    return redirect(auth_url)
+        "redirect_uri": SPOTIFY_REDIRECT_URI,
+        "scope": SCOPES,
+        "show_dialog": "true",
+    }
+    url_params = urllib.parse.urlencode(params)
+    return redirect(f"{auth_url}?{url_params}")
 
 
 def spotify_callback(request):
-    # Handle the redirect back from Spotify with the authorization code
-    code = request.GET.get("code")
-    if code:
-        # Exchange the authorization code for an access token
-        token_response = requests.post(SPOTIFY_TOKEN_URL, data={
-            "grant_type": "authorization_code",
-            "code": code,
-            "redirect_uri": settings.SPOTIFY_REDIRECT_URI,
-            "client_id": settings.SPOTIFY_CLIENT_ID,
-            "client_secret": settings.SPOTIFY_CLIENT_SECRET,
-        })
-        token_data = token_response.json()
-        access_token = token_data.get("access_token")
+    request.session.set_expiry(0)  # Session expires on browser close
 
-        if access_token:
-            # Fetch the user's profile from Spotify
-            headers = {"Authorization": f"Bearer {access_token}"}
-            profile_response = requests.get(SPOTIFY_USER_PROFILE_URL, headers=headers)
-            profile_data = profile_response.json()
+    code = request.GET.get('code')
+    token_url = "https://accounts.spotify.com/api/token"
+    data = {
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": SPOTIFY_REDIRECT_URI,
+        "client_id": SPOTIFY_CLIENT_ID,
+        "client_secret": SPOTIFY_CLIENT_SECRET,
+    }
+    response = requests.post(token_url, data=data)
+    token_info = response.json()
 
-            # Extract necessary information
-            spotify_id = profile_data.get("id")
-            email = profile_data.get("email")
+    
+    access_token = token_info.get("access_token")
+    granted_scopes = token_info.get("scope", "")  # Retrieves granted scopes as a string
 
-            # Get or create a user in your Django app
-            user, created = User.objects.get_or_create(username=spotify_id, defaults={"email": email})
-            if created:
-                user.set_unusable_password()  # Optional: set an unusable password as Spotify manages auth
-
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login(request, user, backend=user.backend)
-
-            # Store the access token in session or database if needed
-            request.session["spotify_access_token"] = access_token
-
-            return redirect("home_logged_in")  # Redirect to the logged-in home view
-
-    return redirect("home_logged_out")  # Redirect if something goes wrong
+    # Log the granted scopes
+    print("Granted Scopes:", granted_scopes)
+    if access_token:
+        # Store the access token in the session
+        request.session['spotify_token'] = access_token
+        request.session['is_authenticated'] = True
+        print("Access token stored in session:", access_token)  # Debugging line
+        User = get_user_model()
+        user, created = User.objects.get_or_create(username="spotify_user")
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        return redirect('home_logged_in')
+    else:
+        print("Failed to obtain access token:", token_info)  # Debugging line   
+    return redirect('home_logged_out')
 
 # View for logged in users
-@login_required  # Ensures only logged in users can access this view
+#@login_required  # Ensures only logged in users can access this view
 def home_logged_in(request):
-     # Check if Spotify access token exists in the session
-    if "spotify_access_token" not in request.session:
-        return redirect('spotify_login')  # Redirect to Spotify login if no access token
 
-    # Optional: Fetch Spotify user data using the access token
-    access_token = request.session["spotify_access_token"]
-    headers = {"Authorization": f"Bearer {access_token}"}
-    response = requests.get(SPOTIFY_USER_PROFILE_URL, headers=headers)
-    spotify_user_data = response.json() if response.status_code == 200 else {}
+    if not request.user.is_authenticated or 'spotify_token' not in request.session:
+        return redirect('spotify_login')
+    
+    access_token = request.session.get('spotify_token')
+    if not access_token:
+        return redirect('spotify_login')
+    try:
+        spotify_user_data = get_spotify_data(request)
+        print("Spotify User Data:", spotify_user_data)  # Debugging line
+    except Exception as e:
+        spotify_user_data = {
+            'error': 'Unable to retrieve data from Spotify',
+            'details': str(e)
+        }
+        print("Error:", e)  # Debugging line
 
-    return render(request, 'home_logged_in.html', {"spotify_user_data": spotify_user_data})
+    # Extract data or provide default empty lists
+    top_artists = spotify_user_data.get('top_artists', [])
+    recently_played = spotify_user_data.get('recently_played', [])
+    top_tracks = spotify_user_data.get('top_tracks', [])
+    playlists = spotify_user_data.get('playlists', [])
+    saved_albums = spotify_user_data.get('saved_albums', [])
+
+    print("Top Artists:", top_artists)  # Debugging line
+    print("Playlists:", playlists)  # Debugging line
+
+    return render(request, 'home_logged_in.html', {
+        'spotify_user_data': spotify_user_data,
+        'top_artists': top_artists,
+        'recently_played': recently_played,
+        'top_tracks': top_tracks,
+        'playlists': playlists,
+        'saved_albums': saved_albums,
+    })
 
 @login_required
 def profile_view(request):
@@ -110,5 +133,6 @@ def home_redirect(request):
 
 
 def logout_view(request):
+    request.session.flush()
     logout(request)
     return redirect('home_redirect')  # Redirect to home page after logout
