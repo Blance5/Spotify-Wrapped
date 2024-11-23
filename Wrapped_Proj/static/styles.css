@@ -3,12 +3,18 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    font: Circular;
 }
 
 header {
-    background-color: #333;
-    color: white;
+    background-color: #000000;
+    color: #1DB954;
     padding: 1rem;
+    text-align: center;
+}
+
+h2, h3 {
+    padding-top: 10px;
     text-align: center;
 }
 
@@ -24,13 +30,19 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: #1DB954   ;
     text-decoration: none;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+nav ul li a:hover {
+    color: #44e67c;
+    text-shadow: 0 0 10px #1DB954, 0 0 20px #26cf61;
 }
 
 footer {
-    background-color: #333;
-    color: white;
+    background-color: #000000;
+    color: #1DB954;
     padding: 0.5rem; /* Reduced padding */
     font-size: 0.875rem; /* Smaller font size */
     text-align: center;
@@ -41,41 +53,49 @@ footer {
 }
 
 
+
 /* Center and size carousel items */
 .carousel-item {
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    height: 65vh; /* Restrict to 65 of the viewport height */
-    max-height: 500px; /* Maximum height limit */
-    width: 90vw;
-    max-width: 600px; /* Limit the width */
+    height: 65vh; /* Adjusted height to maintain proportion */
+    width: 60vw; /* Set the carousel item to take up 60% of the viewport width */
+    max-width: 1000px; /* Max width of carousel item */
     text-align: center;
-    padding: 20px;
+    padding: 20px; /* Adjusted padding for better spacing */
     margin: auto;
     box-sizing: border-box;
     overflow-y: auto; /* Allow scrolling for overflow */
     border-radius: 15px;
+    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Smooth transition effects */
+}
+
+/* Add a hover effect */
+.carousel-item:hover {
+    transform: scale(1.05); /* Slightly scale up */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Add a shadow */
 }
 
 /* Unique background gradients for each carousel item */
 .carousel-item:nth-child(1) {
-    background: linear-gradient(45deg, #ff5f6d, #ffc371);
+    background: linear-gradient(45deg, #ff7eb3, #ff758c);
 }
 
 .carousel-item:nth-child(2) {
-    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    background: linear-gradient(45deg, #6dd5ed, #2193b0);
 }
 
 .carousel-item:nth-child(3) {
-    background: linear-gradient(45deg, #00c9ff, #92fe9d);
+    background: linear-gradient(45deg, #43e97b, #38f9d7);
 }
 
 .carousel-item:nth-child(4) {
-    background: linear-gradient(45deg, #fddb92, #d1fdff);
+    background: linear-gradient(45deg, #fa709a, #fee140);
 }
 
+/* Smooth fade-in effect */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -89,6 +109,37 @@ footer {
 
 .carousel-item .card {
     animation: fadeInUp 0.8s ease;
+    transition: transform 0.3s ease;
+    width: 90%; /* Increased width of the card to fill more space */
+    max-width: 900px; /* Max width for cards */
+    padding: 40px; /* Increased padding for a bigger card */
+    box-sizing: border-box; /* Ensure padding doesn't overflow */
+}
+
+.carousel-item .card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+}
+
+/* Style for the header h1 */
+header h1 {
+    color: #1DB954; /* Set the text color to the desired green */
+    text-align: center; /* Optional: Center the text */
+    animation: pulseGlow 2s infinite ease-in-out; /* Apply the pulsing glow effect */
+}
+
+/* Keyframes for the pulsing glow effect */
+@keyframes pulseGlow {
+    0%, 100% {
+        text-shadow: 0 0 5px #1DB954, 0 0 10px #1DB954, 0 0 15px #1DB954; /* Subtle glow at start and end */
+    }
+    50% {
+        text-shadow: 0 0 10px #1DB954, 0 0 20px #1DB954, 0 0 30px #1DB954; /* Stronger glow at midpoint */
+    }
+}
+
+/* Make background gradients animate smoothly */
+.carousel-item {
+    background-size: 200% 200%;
 }
 
 /* Centering and layout for content */
