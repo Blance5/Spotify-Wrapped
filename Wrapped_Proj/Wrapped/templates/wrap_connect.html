@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}WrapConnect{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>WrapConnect</h2>
+    <p>Share your Spotify Wrapped and connect with others!</p>
+    <div class="row">
+        <!-- Example of user posts -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">User: @musiclover99</h5>
+                    <p class="card-text">Check out my Wrapped for 2024! Top artist: Taylor Swift 🎵</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">User: @rockfan21</h5>
+                    <p class="card-text">Metallica dominated my Wrapped again this year 🤘!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'post_wrap' %}" class="btn btn-success">Post Your Wrapped</a>
+</div>
+{% endblock %}

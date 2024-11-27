@@ -60,20 +60,24 @@
 </head>
 <body class="{{ request.COOKIES.theme|default:'light-mode' }}">
     <header>
-        <h1>My Django App</h1>
+        <h1>Wrapped</h1>
         <nav>
-            <div class="nav-links">
-                <ul>
-                    <li><a href="{% url 'home_redirect' %}">Home</a></li>
-                    {% if user.is_authenticated %}
-                        <li><a href="{% url 'logout' %}">Log Out</a></li>
-                    {% else %}
-                        <li><a href="{% url 'spotify_login' %}">Log In</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-            <div class="dark-mode-toggle" id="darkModeToggle">🌞</div>
-        </nav>
+    <div class="nav-links">
+        <ul>
+            <li><a href="{% url 'home_redirect' %}">Home</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+            <li><a href="{% url 'wrap_connect' %}">WrapConnect</a></li>
+            <li><a href="{% url 'previous_wraps' %}">Previous Wraps</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}">Log Out</a></li>
+            {% else %}
+                <li><a href="{% url 'spotify_login' %}">Log In</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="dark-mode-toggle" id="darkModeToggle">🌞</div>
+</nav>
+
     </header>
 
     <main>
