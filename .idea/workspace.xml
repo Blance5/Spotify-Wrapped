@@ -5,7 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed7a4de2-d53b-4bb2-9967-de1f1d337c76" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/spotify_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/spotify_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/templates/home_logged_in.html" beforeDir="false" afterPath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/templates/home_logged_in.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/templates/post_wrap.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/templates/previous_wraps.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/templates/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/templates/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/templates/wrap_connect.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Wrapped_Proj/Wrapped/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wrapped_Proj/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/Wrapped_Proj/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,7 +44,7 @@
     "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
-    "git-widget-placeholder": "dark-mode",
+    "git-widget-placeholder": "contact-developers-page",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -90,6 +99,7 @@
       <workItem from="1730924751122" duration="3017000" />
       <workItem from="1731358773178" duration="657000" />
       <workItem from="1731963158281" duration="2620000" />
+      <workItem from="1732735036843" duration="2384000" />
     </task>
     <servers />
   </component>
