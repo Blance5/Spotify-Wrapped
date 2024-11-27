@@ -117,7 +117,37 @@ def home_logged_in(request):
 
 @login_required
 def profile_view(request):
-    return render(request, 'profile.html', {'user': request.user})
+    if not request.user.is_authenticated or 'spotify_token' not in request.session:
+        return redirect('spotify_login')
+    
+    access_token = request.session.get('spotify_token')
+    if not access_token:
+        return redirect('spotify_login')
+    try:
+        spotify_user_data = get_spotify_data(request)
+        print("Spotify User Data:", spotify_user_data)  # Debugging line
+    except Exception as e:
+        spotify_user_data = {
+            'error': 'Unable to retrieve data from Spotify',
+            'details': str(e)
+        }
+        print("Error:", e)  # Debugging line
+
+    # Extract data or provide default empty lists
+    top_artists = spotify_user_data.get('top_artists', [])
+    recently_played = spotify_user_data.get('recently_played', [])
+    top_tracks = spotify_user_data.get('top_tracks', [])
+    playlists = spotify_user_data.get('playlists', [])
+    saved_albums = spotify_user_data.get('saved_albums', [])
+
+    return render(request, 'profile.html', {
+        'spotify_user_data': spotify_user_data,
+        'top_artists': top_artists,
+        'recently_played': recently_played,
+        'top_tracks': top_tracks,
+        'playlists': playlists,
+        'saved_albums': saved_albums,
+    })
 
 # View for logged out users
 def home_logged_out(request):
@@ -129,8 +159,8 @@ def home_redirect(request):
     else:
         return redirect('home_logged_out')  # URL name for the logged-out view
 
-
-
+def contact(request):
+    return render(request, 'contact.html')
 
 def logout_view(request):
     request.session.flush()

@@ -14,6 +14,7 @@ urlpatterns = [
     #path('accounts/email/', views.CustomEmailView.as_view(), name='account_email'),  # Custom email view
     path('profile/', profile_view, name='profile'),  # Add the profile URL here
     path('', views.home_redirect, name='home_redirect'),  # Home page view
+    path('contact/', views.contact, name='contact'),
 ]
 
 # Optionally include debug toolbar routes during development
