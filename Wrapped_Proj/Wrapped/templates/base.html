@@ -27,21 +27,32 @@
             color: #ffffff;
         }
 
+        /* Header styles */
         header {
             position: sticky;
             top: 0;
             z-index: 1000;
-            background-color: #f8f9fa; /* Navbar background color */
+            background-color: #f8f9fa; /* Light mode background color */
+            color: #333; /* Light mode font color */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 0.5rem 1rem;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         header h1 {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #333; /* Default color for light mode */
             margin: 0;
             transition: color 0.3s;
+        }
+
+        body.dark-mode header {
+            background-color: #333; /* Dark mode background color */
+            color: #fff; /* Dark mode font color */
+        }
+
+        body.dark-mode header h1 {
+            color: #fff; /* Dark mode font color for header title */
         }
 
         nav {
@@ -69,7 +80,6 @@
             display: inline;
         }
 
-        /* Hover effect for nav links */
         .nav-links ul li a {
             text-decoration: none;
             color: #333; /* Default color */
@@ -77,16 +87,36 @@
             border-bottom: 2px solid transparent;
         }
 
+        .nav-links ul li a.active {
+            font-weight: bold;
+            color: #007bff; /* Active color */
+            border-bottom: 2px solid #007bff; /* Underline effect */
+        }
+
         .nav-links ul li a:hover {
             color: #007bff; /* Hover color */
             border-bottom: 2px solid #007bff; /* Underline effect */
         }
 
-        /* Highlight active page */
-        .nav-links ul li a.active {
-            font-weight: bold;
-            color: #0056b3; /* Active page color */
-            border-bottom: 2px solid #0056b3;
+        body.dark-mode .nav-links ul li a {
+            color: #fff; /* Dark mode font color for nav links */
+        }
+
+        body.dark-mode .nav-links ul li a.active {
+            color: #4caf50; /* Green color for active link in dark mode */
+            border-bottom: 2px solid #4caf50; /* Underline matches active link color */
+        }
+
+        body.dark-mode .nav-links ul li a:hover {
+            color: #bbb; /* Hover color in dark mode */
+            border-bottom-color: #bbb; /* Hover underline matches the font hover color */
+        }
+
+        footer {
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            padding: 1rem 0;
         }
 
         .dark-mode-toggle {
@@ -97,51 +127,44 @@
 </head>
 <body class="{{ request.COOKIES.theme|default:'light-mode' }}">
     <header>
-    <div style="display: flex; align-items: center; justify-content: space-between;">
-        <h1>Wrapped</h1>
-        <nav>
-            <div class="nav-links">
-                <ul>
-                    <li>
-                        <a href="{% url 'home_redirect' %}" 
-                           class="{% if request.resolver_match.url_name == 'home_redirect' %}active{% endif %}">
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'contact' %}" 
-                           class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
-                            Contact
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'wrap_connect' %}" 
-                           class="{% if request.resolver_match.url_name == 'wrap_connect' %}active{% endif %}">
-                            WrapConnect
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'previous_wraps' %}" 
-                           class="{% if request.resolver_match.url_name == 'previous_wraps' %}active{% endif %}">
-                            Previous Wraps
-                        </a>
-                    </li>
-                    {% if user.is_authenticated %}
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h1>Wrapped</h1>
+            <nav>
+                <div class="nav-links">
+                    <ul>
                         <li>
-                            <a href="{% url 'logout' %}">Log Out</a>
+                            <a href="{% url 'home_redirect' %}" 
+                               class="{% if request.resolver_match.url_name == 'home_redirect' %}active{% endif %}">
+                                Home
+                            </a>
                         </li>
-                    {% else %}
                         <li>
-                            <a href="{% url 'spotify_login' %}">Log In</a>
+                            <a href="{% url 'contact' %}" 
+                               class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+                                Contact Us
+                            </a>
                         </li>
-                    {% endif %}
-                </ul>
-            </div>
-            <div class="dark-mode-toggle" id="darkModeToggle">🌞</div>
-        </nav>
-    </div>
-</header>
-
+                        {% if user.is_authenticated %}
+                            <li>
+                                <a href="{% url 'profile' %}" 
+                                   class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                                    Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'logout' %}">Log Out</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{% url 'spotify_login' %}">Log In</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="dark-mode-toggle" id="darkModeToggle">🌞</div>
+            </nav>
+        </div>
+    </header>
 
     <main>
         {% block content %}
@@ -153,30 +176,30 @@
         <p>&copy; 2024 Wrapped</p>
     </footer>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const toggleIcon = document.getElementById('darkModeToggle');
-        const body = document.body;
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleIcon = document.getElementById('darkModeToggle');
+            const body = document.body;
 
-        // Set initial icon state
-        toggleIcon.textContent = body.classList.contains('dark-mode') ? '🌞' : '🌙';
+            // Set initial icon state
+            toggleIcon.textContent = body.classList.contains('dark-mode') ? '🌞' : '🌙';
 
-        // Helper function to set a cookie
-        const setCookie = (name, value, days) => {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
-        };
+            // Helper function to set a cookie
+            const setCookie = (name, value, days) => {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+            };
 
-        // Toggle theme and update cookie
-        toggleIcon.addEventListener('click', () => {
-            const isDarkMode = body.classList.contains('dark-mode');
-            body.classList.toggle('dark-mode', !isDarkMode);
-            body.classList.toggle('light-mode', isDarkMode);
-            toggleIcon.textContent = isDarkMode ? '🌙' : '🌞'; // Moon for light, Sun for dark
-            setCookie('theme', isDarkMode ? 'light-mode' : 'dark-mode', 30);
+            // Toggle theme and update cookie
+            toggleIcon.addEventListener('click', () => {
+                const isDarkMode = body.classList.contains('dark-mode');
+                body.classList.toggle('dark-mode', !isDarkMode);
+                body.classList.toggle('light-mode', isDarkMode);
+                toggleIcon.textContent = isDarkMode ? '🌙' : '🌞'; // Moon for light, Sun for dark
+                setCookie('theme', isDarkMode ? 'light-mode' : 'dark-mode', 30);
+            });
         });
-    });
-</script>
+    </script>
 </body>
 </html>

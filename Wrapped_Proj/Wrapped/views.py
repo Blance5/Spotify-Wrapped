@@ -132,15 +132,6 @@ def home_redirect(request):
 def contact(request):
     return render(request, 'contact.html')
 
-def wrap_connect(request):
-    return render(request, 'wrap_connect.html')
-
-def previous_wraps(request):
-    return render(request, 'previous_wraps.html')
-
-def post_wrap(request):
-    return render(request, 'post_wrap.html', context={})
-
 def logout_view(request):
     request.session.flush()
     logout(request)

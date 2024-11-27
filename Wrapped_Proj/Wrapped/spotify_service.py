@@ -20,6 +20,7 @@ def get_spotify_access_token():
     token_info = response.json()
     return token_info.get("access_token")
 
+
 def get_spotify_data(request):
     access_token = request.session.get('spotify_token')
     if not access_token:
@@ -30,51 +31,57 @@ def get_spotify_data(request):
     }
 
     try:
-        # get user profile
         # Retrieve user profile data
         user_profile_response = requests.get("https://api.spotify.com/v1/me", headers=headers)
-        user_profile = {}
-        if user_profile_response.status_code == 200:
-            user_profile = user_profile_response.json()
+        if user_profile_response.status_code != 200:
+            print("User Profile Error:", user_profile_response.status_code, user_profile_response.text)
+            raise Exception("Failed to fetch user profile")
 
-        # Get Top Tracks
+        user_profile = user_profile_response.json()
+
+        # Retrieve top tracks
         top_tracks_response = requests.get("https://api.spotify.com/v1/me/top/tracks?limit=6", headers=headers)
-        top_tracks = []
-        if top_tracks_response.status_code == 200:
-            top_tracks = [{
+        top_tracks = [
+            {
                 'name': track['name'],
                 'artist': track['artists'][0]['name']
-            } for track in top_tracks_response.json().get('items', [])]
+            }
+            for track in top_tracks_response.json().get('items', [])
+        ] if top_tracks_response.status_code == 200 else []
 
+        # Retrieve top artists
         top_artists_response = requests.get("https://api.spotify.com/v1/me/top/artists?limit=5", headers=headers)
-        top_artists = []
-        if top_artists_response.status_code == 200:
-            top_artists = [{
+        top_artists = [
+            {
                 'name': artist['name'],
-                'image_url': artist['images'][0]['url'] if artist['images'] else None  # Use the first image if available
-            } for artist in top_artists_response.json().get('items', [])]
+                'image_url': artist['images'][0]['url'] if artist['images'] else None
+            }
+            for artist in top_artists_response.json().get('items', [])
+        ] if top_artists_response.status_code == 200 else []
 
-        # Get Playlists
+        # Retrieve playlists
         playlists_response = requests.get("https://api.spotify.com/v1/me/playlists?limit=5", headers=headers)
-        playlists = []
-        if playlists_response.status_code == 200:
-            playlists = [{
+        playlists = [
+            {
                 'name': playlist['name'],
                 'description': playlist.get('description', ''),
                 'track_count': playlist['tracks']['total']
-            } for playlist in playlists_response.json().get('items', [])]
+            }
+            for playlist in playlists_response.json().get('items', [])
+        ] if playlists_response.status_code == 200 else []
 
-        # Get Saved Albums
+        # Retrieve saved albums
         saved_albums_response = requests.get("https://api.spotify.com/v1/me/albums?limit=5", headers=headers)
-        saved_albums = []
-        if saved_albums_response.status_code == 200:
-            saved_albums = [{
+        saved_albums = [
+            {
                 'name': album['album']['name'],
                 'artist': album['album']['artists'][0]['name']
-            } for album in saved_albums_response.json().get('items', [])]
+            }
+            for album in saved_albums_response.json().get('items', [])
+        ] if saved_albums_response.status_code == 200 else []
 
         return {
-            'display_name': user_profile.get('display_name', 'User'),  # Default to 'User' if missing
+            'display_name': user_profile.get('display_name', 'User'),
             'email': user_profile.get('email', ''),
             'country': user_profile.get('country', ''),
             'product': user_profile.get('product', ''),

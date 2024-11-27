@@ -3,16 +3,34 @@
 {% block title %}Profile - FoodFinder{% endblock %}
 
 {% block content %}
-    <h2>{{ user.username }}'s Profile</h2>
-    <p><strong>Email:</strong>
-        {% if user.email %}
-            {{ user.email }}
-        {% elif user.socialaccount_set.exists %}
-            {{ user.socialaccount_set.first.extra_data.email }}
-        {% else %}
-            No email available
-        {% endif %}
-    </p>
-    <p><strong>First name:</strong> {{ user.first_name }}</p>
-    <p><strong>Last name:</strong> {{ user.last_name }}</p>
+    <section>
+        <h2>{{ user.username }}'s Profile</h2>
+        
+        <p><strong>Email:</strong>
+            {% if user.email %}
+                {{ user.email }}
+            {% elif user.socialaccount_set.exists %}
+                {{ user.socialaccount_set.first.extra_data.email }}
+            {% else %}
+                No email available
+            {% endif %}
+        </p>
+        <p><strong>First name:</strong> {{ user.first_name }}</p>
+        <p><strong>Last name:</strong> {{ user.last_name }}</p>
+    </section>
+
+    <hr>
+
+    <!-- Generate Wrapped Section -->
+    <section>
+        <h3>Generate Wrapped</h3>
+        <p>Discover your music trends and generate your personalized Wrapped!</p>
+    </section>
+
+    <hr>
+
+    <!-- Past Wraps Section -->
+    <section>
+        <h3>Past Wraps</h3>
+        <p>View your previously generated Wrapped reports:</p>
 {% endblock %}
