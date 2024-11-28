@@ -1,95 +1,122 @@
-# myapp/spotify_service.py
 import requests
-from decouple import config
-from base64 import b64encode
 
-SPOTIFY_CLIENT_ID = config('SPOTIFY_CLIENT_ID')
-SPOTIFY_CLIENT_SECRET = config('SPOTIFY_CLIENT_SECRET')
-SCOPES = "user-top-read playlist-read-private user-library-read user-read-email"
-
-def get_spotify_access_token():
-    client_creds = f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}"
-    encoded_creds = b64encode(client_creds.encode()).decode()
-    headers = {
-        "Authorization": f"Basic {encoded_creds}"
+def refresh_access_token(refresh_token, client_id, client_secret):
+    """
+    Refresh the Spotify access token using the refresh token.
+    """
+    url = "https://accounts.spotify.com/api/token"
+    payload = {
+        'grant_type': 'refresh_token',
+        'refresh_token': refresh_token,
+        'client_id': client_id,
+        'client_secret': client_secret
     }
-    data = {
-        "grant_type": "client_credentials"
-    }
-    response = requests.post("https://accounts.spotify.com/api/token", headers=headers, data=data)
-    token_info = response.json()
-    return token_info.get("access_token")
+    response = requests.post(url, data=payload)
+    if response.status_code == 200:
+        return response.json().get('access_token')
+    else:
+        print(f"Error refreshing token: {response.json()}")
+        return None
 
+def fetch_spotify_endpoint(url, access_token):
+    """
+    Fetch data from a Spotify API endpoint.
+    """
+    headers = {'Authorization': f'Bearer {access_token}'}
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        print(f"Error fetching data from {url}: {response.json()}")
+        return None
+    return response.json()
 
 def get_spotify_data(request):
     access_token = request.session.get('spotify_token')
     if not access_token:
-        return {"error": "No access token"}
+        print("Access token is missing or invalid.")
+        return {"error": "Access token missing or invalid"}
 
-    headers = {
-        "Authorization": f"Bearer {access_token}"
-    }
+    headers = {"Authorization": f"Bearer {access_token}"}
+    data = {}
 
+    # Fetch Spotify user profile
     try:
-        # Retrieve user profile data
-        user_profile_response = requests.get("https://api.spotify.com/v1/me", headers=headers)
-        if user_profile_response.status_code != 200:
-            print("User Profile Error:", user_profile_response.status_code, user_profile_response.text)
-            raise Exception("Failed to fetch user profile")
+        profile_response = requests.get(
+            "https://api.spotify.com/v1/me",
+            headers=headers
+        )
+        profile_response.raise_for_status()
+        profile_data = profile_response.json()
 
-        user_profile = user_profile_response.json()
-
-        # Retrieve top tracks
-        top_tracks_response = requests.get("https://api.spotify.com/v1/me/top/tracks?limit=6", headers=headers)
-        top_tracks = [
-            {
-                'name': track['name'],
-                'artist': track['artists'][0]['name']
-            }
-            for track in top_tracks_response.json().get('items', [])
-        ] if top_tracks_response.status_code == 200 else []
-
-        # Retrieve top artists
-        top_artists_response = requests.get("https://api.spotify.com/v1/me/top/artists?limit=5", headers=headers)
-        top_artists = [
-            {
-                'name': artist['name'],
-                'image_url': artist['images'][0]['url'] if artist['images'] else None
-            }
-            for artist in top_artists_response.json().get('items', [])
-        ] if top_artists_response.status_code == 200 else []
-
-        # Retrieve playlists
-        playlists_response = requests.get("https://api.spotify.com/v1/me/playlists?limit=5", headers=headers)
-        playlists = [
-            {
-                'name': playlist['name'],
-                'description': playlist.get('description', ''),
-                'track_count': playlist['tracks']['total']
-            }
-            for playlist in playlists_response.json().get('items', [])
-        ] if playlists_response.status_code == 200 else []
-
-        # Retrieve saved albums
-        saved_albums_response = requests.get("https://api.spotify.com/v1/me/albums?limit=5", headers=headers)
-        saved_albums = [
-            {
-                'name': album['album']['name'],
-                'artist': album['album']['artists'][0]['name']
-            }
-            for album in saved_albums_response.json().get('items', [])
-        ] if saved_albums_response.status_code == 200 else []
-
-        return {
-            'display_name': user_profile.get('display_name', 'User'),
-            'email': user_profile.get('email', ''),
-            'country': user_profile.get('country', ''),
-            'product': user_profile.get('product', ''),
-            'top_tracks': top_tracks,
-            'top_artists': top_artists,
-            'playlists': playlists,
-            'saved_albums': saved_albums
+        # Extract profile details
+        data["profile"] = {
+            "display_name": profile_data.get("display_name", "Unknown User"),
+            "email": profile_data.get("email", "No email provided")
         }
+        print("Profile Data:", data["profile"])
     except Exception as e:
-        print("Error fetching Spotify data:", e)
-        return {"error": "Failed to retrieve Spotify data"}
+        print("Error fetching profile data:", str(e))
+        data["profile"] = {"display_name": "Unknown User", "email": "No email provided"}
+
+    # Fetch top tracks
+    try:
+        top_tracks_response = requests.get(
+            "https://api.spotify.com/v1/me/top/tracks",
+            headers=headers,
+            params={"limit": 10}
+        )
+        top_tracks_response.raise_for_status()
+        data["top_tracks"] = [
+            {"name": track["name"], "artist": track["artists"][0]["name"]}
+            for track in top_tracks_response.json().get("items", [])
+        ]
+        print("Top Tracks:", data["top_tracks"])
+    except Exception as e:
+        print("Error fetching top tracks:", str(e))
+        data["top_tracks"] = []
+   
+
+    # Fetch top artists
+    try:
+        top_artists_response = requests.get(
+            "https://api.spotify.com/v1/me/top/artists",
+            headers=headers,
+            params={"limit": 10}
+        )
+        top_artists_response.raise_for_status()
+        data["top_artists"] = [
+            {"name": artist["name"], "image_url": artist["images"][0]["url"]}
+            for artist in top_artists_response.json().get("items", [])
+        ]
+        print("Top Artists:", data["top_artists"])
+    except Exception as e:
+        print("Error fetching top artists:", str(e))
+        data["top_artists"] = []
+
+        # Fetch playlists
+    try:
+        playlists_response = requests.get(
+            "https://api.spotify.com/v1/me/playlists",
+            headers=headers,
+            params={"limit": 15}
+        )
+        playlists_response.raise_for_status()
+        playlists_data = playlists_response.json()
+        print("Raw Playlists Response:", playlists_data)  # Debug raw response
+
+        # Filter out None items
+        playlists_items = [playlist for playlist in playlists_data.get("items", []) if playlist is not None]
+
+        data["playlists"] = [
+            {"name": playlist.get("name", "Unknown"), "track_count": playlist.get("tracks", {}).get("total", 0)}
+            for playlist in playlists_items
+        ]
+        print("Playlists:", data["playlists"])
+    except Exception as e:
+        print("Error fetching playlists:", str(e))
+        data["playlists"] = []
+
+
+    return data
+
+
+
