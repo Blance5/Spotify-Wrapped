@@ -29,7 +29,8 @@ def fetch_spotify_endpoint(url, access_token):
         return None
     return response.json()
 
-def get_spotify_data(request):
+
+def get_spotify_data(request, term):
     access_token = request.session.get('spotify_token')
     if not access_token:
         print("Access token is missing or invalid.")
@@ -62,7 +63,8 @@ def get_spotify_data(request):
         top_tracks_response = requests.get(
             "https://api.spotify.com/v1/me/top/tracks",
             headers=headers,
-            params={"limit": 10}
+            params={"limit": 8,
+                    "time_range": term}
         )
         top_tracks_response.raise_for_status()
         data["top_tracks"] = [
@@ -80,7 +82,8 @@ def get_spotify_data(request):
         top_artists_response = requests.get(
             "https://api.spotify.com/v1/me/top/artists",
             headers=headers,
-            params={"limit": 10}
+            params={"limit": 5,  # Adjust the number of top artists to fetch (e.g., 10)
+                    "time_range": term}
         )
         top_artists_response.raise_for_status()
         data["top_artists"] = [
@@ -97,7 +100,7 @@ def get_spotify_data(request):
         playlists_response = requests.get(
             "https://api.spotify.com/v1/me/playlists",
             headers=headers,
-            params={"limit": 15}
+            params={"time_range": term} 
         )
         playlists_response.raise_for_status()
         playlists_data = playlists_response.json()
@@ -106,11 +109,22 @@ def get_spotify_data(request):
         # Filter out None items
         playlists_items = [playlist for playlist in playlists_data.get("items", []) if playlist is not None]
 
-        data["playlists"] = [
-            {"name": playlist.get("name", "Unknown"), "track_count": playlist.get("tracks", {}).get("total", 0)}
-            for playlist in playlists_items
-        ]
-        print("Playlists:", data["playlists"])
+        # Fetch track count for each playlist and store the name with track count
+        playlists_with_track_count = []
+        for playlist in playlists_items:
+            track_count = playlist.get("tracks", {}).get("total", 0)
+            playlists_with_track_count.append({
+                "name": playlist.get("name", "Unknown"),
+                "track_count": track_count
+            })
+
+        # Sort playlists by track count in descending order
+        playlists_with_track_count.sort(key=lambda x: x["track_count"], reverse=True)
+        playlists_with_track_count = playlists_with_track_count[:5]  # Top 5 playlists
+
+        # Return the sorted playlists
+        data["playlists"] = playlists_with_track_count
+        print("Sorted Playlists:", data["playlists"])
     except Exception as e:
         print("Error fetching playlists:", str(e))
         data["playlists"] = []

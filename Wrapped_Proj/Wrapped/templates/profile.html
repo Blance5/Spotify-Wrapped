@@ -4,11 +4,11 @@
 
 {% block content %}
     <section>
-        <h2>{{ profile.display_name }}'s Profile</h2>
+        <h2>{{ spotify_user_data.profile.display_name }}'s Profile</h2>
         
         <p><strong>Email:</strong>
-            {% if profile.email %}
-                {{ profile.email }}
+            {% if spotify_user_data.profile.email %}
+                {{ spotify_user_data.profile.email }}
             {% else %}
                 No email available
             {% endif %}

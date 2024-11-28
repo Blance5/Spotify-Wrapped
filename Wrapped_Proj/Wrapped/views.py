@@ -57,63 +57,57 @@ def spotify_callback(request):
     response = requests.post(token_url, data=data)
     token_info = response.json()
 
+    
     access_token = token_info.get("access_token")
-    refresh_token = token_info.get("refresh_token")  # Retrieve refresh token
     granted_scopes = token_info.get("scope", "")  # Retrieves granted scopes as a string
 
     # Log the granted scopes
     print("Granted Scopes:", granted_scopes)
-    if access_token and refresh_token:
-        # Store tokens in the session
+    if access_token:
+        # Store the access token in the session
         request.session['spotify_token'] = access_token
-        request.session['spotify_refresh_token'] = refresh_token
         request.session['is_authenticated'] = True
         print("Access token stored in session:", access_token)  # Debugging line
-
         User = get_user_model()
         user, created = User.objects.get_or_create(username="spotify_user")
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('home_logged_in')
     else:
-        print("Failed to obtain access or refresh token:", token_info)  # Debugging line   
+        print("Failed to obtain access token:", token_info)  # Debugging line   
     return redirect('home_logged_out')
-
 
 # View for logged in users
 #@login_required  # Ensures only logged in users can access this view
 def home_logged_in(request):
+
     if not request.user.is_authenticated or 'spotify_token' not in request.session:
         return redirect('spotify_login')
-
+    
     access_token = request.session.get('spotify_token')
     if not access_token:
         return redirect('spotify_login')
-
     try:
-        spotify_user_data = get_spotify_data(request)
+        ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        # Replace with actual term that user chooses
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        spotify_user_data = get_spotify_data(request, "long_term")
         print("Spotify User Data:", spotify_user_data)  # Debugging line
-
-        # Extract data
-        top_artists = spotify_user_data.get('top_artists', [])
-        recently_played = spotify_user_data.get('recently_played', [])
-        top_tracks = spotify_user_data.get('top_tracks', [])
-        playlists = spotify_user_data.get('playlists', [])
-        saved_albums = spotify_user_data.get('saved_albums', [])
-        profile = spotify_user_data.get('profile', {})
     except Exception as e:
         spotify_user_data = {
             'error': 'Unable to retrieve data from Spotify',
             'details': str(e)
         }
-        print("Error fetching Spotify data:", e)  # Debugging line
+        print("Error:", e)  # Debugging line
 
-        # Set default empty values if an error occurs
-        top_artists = []
-        recently_played = []
-        top_tracks = []
-        playlists = []
-        saved_albums = []
-        profile = {"display_name": "Unknown User", "email": "No email provided"}
+    # Extract data or provide default empty lists
+    top_artists = spotify_user_data.get('top_artists', [])
+    recently_played = spotify_user_data.get('recently_played', [])
+    top_tracks = spotify_user_data.get('top_tracks', [])
+    playlists = spotify_user_data.get('playlists', [])
+    saved_albums = spotify_user_data.get('saved_albums', [])
+
+    print("Top Artists:", top_artists)  # Debugging line
+    print("Playlists:", playlists)  # Debugging line
 
     return render(request, 'home_logged_in.html', {
         'spotify_user_data': spotify_user_data,
@@ -122,25 +116,22 @@ def home_logged_in(request):
         'top_tracks': top_tracks,
         'playlists': playlists,
         'saved_albums': saved_albums,
-        'profile': profile,
     })
 
-
 @login_required
-def profile_view(request):
+def wrapped_view(request):
     if not request.user.is_authenticated or 'spotify_token' not in request.session:
         return redirect('spotify_login')
-
+    
     access_token = request.session.get('spotify_token')
     if not access_token:
         return redirect('spotify_login')
-
     try:
-        spotify_user_data = get_spotify_data(request)
+        ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        # Replace with actual term that user chooses
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        spotify_user_data = get_spotify_data(request, "long_term")
         print("Spotify User Data:", spotify_user_data)  # Debugging line
-
-        # Extract profile
-        profile = spotify_user_data.get('profile', {})
     except Exception as e:
         spotify_user_data = {
             'error': 'Unable to retrieve data from Spotify',
@@ -148,15 +139,58 @@ def profile_view(request):
         }
         print("Error:", e)  # Debugging line
 
-        profile = {"display_name": "Unknown User", "email": "No email provided"}
+    # Extract data or provide default empty lists
+    top_artists = spotify_user_data.get('top_artists', [])
+    recently_played = spotify_user_data.get('recently_played', [])
+    top_tracks = spotify_user_data.get('top_tracks', [])
+    playlists = spotify_user_data.get('playlists', [])
+    saved_albums = spotify_user_data.get('saved_albums', [])
 
-    return render(request, 'profile.html', {
-        'profile': profile,  # Directly pass the profile dictionary
-        'playlists': spotify_user_data.get('playlists', []),
+    print("Top Artists:", top_artists)  # Debugging line
+    print("Playlists:", playlists)  # Debugging line
+
+    return render(request, 'wrapped.html', {
+        'spotify_user_data': spotify_user_data,
+        'top_artists': top_artists,
+        'recently_played': recently_played,
+        'top_tracks': top_tracks,
+        'playlists': playlists,
+        'saved_albums': saved_albums,
     })
 
+@login_required
+def profile_view(request):
+    if not request.user.is_authenticated or 'spotify_token' not in request.session:
+        return redirect('spotify_login')
+    
+    access_token = request.session.get('spotify_token')
+    if not access_token:
+        return redirect('spotify_login')
+    try:
+        spotify_user_data = get_spotify_data(request, "long_term")
+        print("Spotify User Data:\n\n\n", spotify_user_data)  # Debugging line
+    except Exception as e:
+        spotify_user_data = {
+            'error': 'Unable to retrieve data from Spotify',
+            'details': str(e)
+        }
+        print("Error:", e)  # Debugging line
 
+    # Extract data or provide default empty lists
+    top_artists = spotify_user_data.get('top_artists', [])
+    recently_played = spotify_user_data.get('recently_played', [])
+    top_tracks = spotify_user_data.get('top_tracks', [])
+    playlists = spotify_user_data.get('playlists', [])
+    saved_albums = spotify_user_data.get('saved_albums', [])
 
+    return render(request, 'profile.html', {
+        'spotify_user_data': spotify_user_data,
+        'top_artists': top_artists,
+        'recently_played': recently_played,
+        'top_tracks': top_tracks,
+        'playlists': playlists,
+        'saved_albums': saved_albums,
+    })
 
 # View for logged out users
 def home_logged_out(request):
