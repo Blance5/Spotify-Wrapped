@@ -13,6 +13,8 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
+from django.http import JsonResponse
+from django.core.mail import send_mail
 import urllib.parse
 from decouple import config
 from django.contrib.auth import login, get_user_model
@@ -203,7 +205,39 @@ def home_redirect(request):
         return redirect('home_logged_out')  # URL name for the logged-out view
 
 def contact(request):
-    return render(request, 'contact.html')
+    success_message = None  # To hold success message
+    error_message = None  # To hold error message
+
+    if request.method == 'POST':
+        # Get form data
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        message = request.POST.get('message', '').strip()
+
+        # Validate form data
+        if not name or not email or not message:
+            error_message = 'All fields are required.'
+        else:
+            try:
+                # Process the message (e.g., send an email)
+                recipient_email = getattr(settings, 'EMAIL_HOST_USER', 'wrappeddevs@gmail.com')  # Fallback email
+                send_mail(
+                    subject=f"Contact Form Submission from {name}",
+                    message=message,
+                    from_email=email,
+                    recipient_list=[recipient_email],
+                    fail_silently=False,
+                )
+                success_message = 'Thank you for contacting us! We will get back to you soon.'
+            except Exception as e:
+                print(f"Error sending email: {e}")
+                error_message = 'An error occurred while sending your message. Please try again later.'
+
+    # Render the contact page with success or error messages
+    return render(request, 'contact.html', {
+        'success_message': success_message,
+        'error_message': error_message,
+    })
 
 def logout_view(request):
     request.session.flush()

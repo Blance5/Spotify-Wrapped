@@ -12,6 +12,34 @@ header {
     text-align: center;
 }
 
+/* Align the logo and Wrapped text properly */
+header img {
+    height: 40px; /* Smaller height for the logo */
+    margin-right: 10px; /* Space between the logo and text */
+    width: auto; /* Maintain aspect ratio */
+    vertical-align: middle; /* Align the logo vertically with the text */
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle; /* Align text with the logo */
+}
+
+/* For responsive design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    header img {
+        height: 35px; /* Slightly smaller on smaller screens */
+        margin-right: 8px;
+    }
+}
+
 nav ul {
     list-style-type: none;
     margin: 0;

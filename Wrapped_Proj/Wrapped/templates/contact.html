@@ -6,6 +6,22 @@
 <div class="container mt-5">
     <h2>Contact Us</h2>
     <p>If you have any questions, feedback, or suggestions, feel free to reach out!</p>
+
+    <!-- Success Message -->
+    {% if success_message %}
+    <div class="alert alert-success" role="alert">
+        {{ success_message }}
+    </div>
+    {% endif %}
+
+    <!-- Error Message -->
+    {% if error_message %}
+    <div class="alert alert-danger" role="alert">
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    <!-- Contact Form -->
     <form method="post" action="{% url 'contact' %}">
         {% csrf_token %}
         <div class="mb-3">
@@ -23,4 +39,5 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
+
 {% endblock %}
