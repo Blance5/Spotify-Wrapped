@@ -53,7 +53,6 @@ def get_spotify_data(request, term):
             "display_name": profile_data.get("display_name", "Unknown User"),
             "email": profile_data.get("email", "No email provided")
         }
-        print("Profile Data:", data["profile"])
     except Exception as e:
         print("Error fetching profile data:", str(e))
         data["profile"] = {"display_name": "Unknown User", "email": "No email provided"}
@@ -71,7 +70,6 @@ def get_spotify_data(request, term):
             {"name": track["name"], "artist": track["artists"][0]["name"]}
             for track in top_tracks_response.json().get("items", [])
         ]
-        print("Top Tracks:", data["top_tracks"])
     except Exception as e:
         print("Error fetching top tracks:", str(e))
         data["top_tracks"] = []
@@ -90,7 +88,6 @@ def get_spotify_data(request, term):
             {"name": artist["name"], "image_url": artist["images"][0]["url"]}
             for artist in top_artists_response.json().get("items", [])
         ]
-        print("Top Artists:", data["top_artists"])
     except Exception as e:
         print("Error fetching top artists:", str(e))
         data["top_artists"] = []
@@ -104,7 +101,6 @@ def get_spotify_data(request, term):
         )
         playlists_response.raise_for_status()
         playlists_data = playlists_response.json()
-        print("Raw Playlists Response:", playlists_data)  # Debug raw response
 
         # Filter out None items
         playlists_items = [playlist for playlist in playlists_data.get("items", []) if playlist is not None]
@@ -124,7 +120,6 @@ def get_spotify_data(request, term):
 
         # Return the sorted playlists
         data["playlists"] = playlists_with_track_count
-        print("Sorted Playlists:", data["playlists"])
     except Exception as e:
         print("Error fetching playlists:", str(e))
         data["playlists"] = []
