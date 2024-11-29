@@ -125,7 +125,8 @@ def wrapped_view(request):
         ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # Replace with actual term that user chooses
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        spotify_user_data = get_spotify_data(request, "long_term")
+        term = request.GET.get('term', 'long_term')  # Default to 'long_term'
+        spotify_user_data = get_spotify_data(request, term)
     except Exception as e:
         spotify_user_data = {
             'error': 'Unable to retrieve data from Spotify',

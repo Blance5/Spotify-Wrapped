@@ -10,10 +10,23 @@
     <p>Email: {{ spotify_user_data.profile.email }}</p>
     <p>What have you been Listening to?</p>
 
-    <!-- Button to go to Wrapped page -->
-    <form action="{% url 'wrapped' %}" method="get">
-        <button type="submit" class="btn btn-primary">Go To Your Wrapped</button>
-    </form>
+    
+
+    <!-- Dropdown for selecting term -->
+    <section>
+        <h3>Select Time-Frame for Wrapped</h3>
+        <form method="GET" action="{% url 'wrapped' %}" id="term-form">
+            <label for="term">Choose a term:</label>
+            <select id="term" name="term">
+                <option value="short_term" {% if selected_term == 'short_term' %}selected{% endif %}>Short Term</option>
+                <option value="medium_term" {% if selected_term == 'medium_term' %}selected{% endif %}>Medium Term</option>
+                <option value="long_term" {% if selected_term == 'long_term' %}selected{% endif %}>Long Term</option>
+            </select>
+
+            <!-- Button to go to Wrapped page -->
+            <button type="submit" class="btn btn-primary">Go To Your Wrapped</button>
+        </form>
+    </section>
 
     
 {% else %}
