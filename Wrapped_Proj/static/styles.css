@@ -215,6 +215,8 @@ h2 {
     .personality-card {
         padding: 1rem;
     }
+    .description-box {
+        max-width: 80%; /* Wider box for smaller screens */
 }
 
 @media (max-width: 480px) {

@@ -1,8 +1,49 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Contact{% endblock %}
 
 {% block content %}
+
+<!-- Meet the Developers Section -->
+<section>
+    <h2 style="text-align: center; margin-top: 20px;">MEET THE DEVELOPERS</h2>
+    <div class="team-container">
+        <div class="team-member">
+            <img src="{% static 'david_izadi.png' %}" alt="David Izadi">
+            <h4>David Izadi</h4>
+            <p>Back-End Developer</p>
+        </div>
+        <div class="team-member">
+            <img src="{% static 'blake_alford.png' %}" alt="Blake Alford">
+            <h4>Blake Alford</h4>
+            <p>Front-End Developer</p>
+        </div>
+        <div class="team-member">
+            <img src="{% static 'benjamin_lance.png' %}" alt="Benjamin Lance">
+            <h4>Benjamin Lance</h4>
+            <p>Scrum Master, Back-End Developer</p>
+        </div>
+        <div class="team-member">
+            <img src="{% static 'leo_hollingworth.jpg' %}" alt="Leo Hollingworth">
+            <h4>Leo Hollingworth</h4>
+            <p>Product Owner, Full-Stack Developer</p>
+        </div>
+        <div class="team-member">
+            <img src="{% static 'lawrence_williams.png' %}" alt="Lawrence Williams">
+            <h4>Lawrence Williams</h4>
+            <p>Full-Stack Developer</p>
+        </div>
+    </div>
+
+    <!-- Centered Description -->
+    <div class="description-box">
+        <p>
+            "We are a passionate team of Georgia Tech computer science students with a shared love for music and technology. Drawing from our expertise in software development and design, we have combined creativity with technical skills to create an enhanced Spotify Wrapped experience. Our goal is to provide users with insightful and fun ways to explore their listening habits through an aesthetically pleasing and user-friendly interface. Guided by Agile methodologies, we worked collaboratively to deliver a polished and personalized product. This project reflects our dedication to innovation, teamwork, and creating meaningful connections through music."
+        </p>
+    </div>
+</section>
+
 <div class="container mt-5">
     <h2>Contact Us</h2>
     <p>If you have any questions, feedback, or suggestions, feel free to reach out!</p>
@@ -39,5 +80,52 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
+
+<!-- Styling -->
+<style>
+    .team-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .team-member {
+        text-align: center;
+        margin: 20px;
+        max-width: 200px;
+    }
+
+    .team-member img {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .team-member h4 {
+        margin: 10px 0 5px;
+    }
+
+    .description-box {
+    background-color: var(--description-bg, #f5f5f5); /* Default light mode */
+    color: var(--description-text, #333); /* Default light mode */
+    text-align: center;
+    padding: 20px;
+    margin: 30px auto; /* Centers the box horizontally */
+    max-width: 70%; /* Restrict width to 50% of the page */
+    min-width: 300px; /* Minimum width for smaller screens */
+    border-radius: 10px;
+    font-size: 18px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transitions for dark mode */
+    }
+
+    /* Dark mode overrides */
+    body.dark-mode .description-box {
+        background-color: #333; /* Dark mode background */
+        color: #fff; /* Light text for dark mode */
+    }
+</style>
 
 {% endblock %}
