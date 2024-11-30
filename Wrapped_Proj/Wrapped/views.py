@@ -21,6 +21,7 @@ from django.contrib.auth import login, get_user_model
 from .models import Wrap
 from .models import UserWrappedHistory  # Assuming you're saving the timeframes in a model
 from Wrapped.models import UserWrappedHistory
+from django.contrib import messages
 
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
@@ -239,33 +240,45 @@ def regenerate_past_wrap(request, wrap_id):
 
 @login_required
 def profile_view(request):
+    # Check if the user is authenticated with Spotify
     if not request.user.is_authenticated or 'spotify_token' not in request.session:
         return redirect('spotify_login')
 
     access_token = request.session.get('spotify_token')
     if not access_token:
         return redirect('spotify_login')
+
     try:
+        # Retrieve Spotify user data
         spotify_user_data = get_spotify_data(request, "long_term")
+        
+        # Extract profile data
+        profile_data = spotify_user_data.get("profile", {})
+        spotify_user_id = profile_data.get("id", "Unknown")
+
+        # Fetch past wraps, ensuring they match the current Spotify user ID
+        past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')[:5]
+
     except Exception as e:
+        # Comprehensive error handling
+        print(f"Error retrieving Spotify data: {e}")
+        messages.error(request, 'Unable to retrieve Spotify data. Please try again later.')
         spotify_user_data = {
             'error': 'Unable to retrieve data from Spotify',
             'details': str(e)
         }
-        print("Error:", e)  # Debugging line
+        past_wraps = []
 
-    profile_data = spotify_user_data["profile"]
-    spotify_user_id = profile_data.get("id", "Unknown")
-    past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')[:5]
-
-    print("\n\n\n\n\n\n\n", spotify_user_id, past_wraps, "\n\n\n\n\n")
-
-    # Extract data or provide default empty lists
+    # Safely extract data with default empty lists
     top_artists = spotify_user_data.get('top_artists', [])
     recently_played = spotify_user_data.get('recently_played', [])
     top_tracks = spotify_user_data.get('top_tracks', [])
     playlists = spotify_user_data.get('playlists', [])
     saved_albums = spotify_user_data.get('saved_albums', [])
+
+    # Logging for debugging (remove in production)
+    print(f"Spotify User ID: {spotify_user_id}")
+    print(f"Past Wraps Count: {len(past_wraps)}")
 
     return render(request, 'profile.html', {
         'spotify_user_data': spotify_user_data,
@@ -274,7 +287,7 @@ def profile_view(request):
         'top_tracks': top_tracks,
         'playlists': playlists,
         'saved_albums': saved_albums,
-        'past_wraps': past_wraps,  # Pass the past wraps to the template
+        'past_wraps': past_wraps,
     })
 
 
@@ -341,11 +354,6 @@ def delete_wrap(request, wrap_id):
     # Redirect back to the profile page
     return redirect('profile')
 
-def delete_wrap_by_id(wrap_id):
-    wrap = get_object_or_404(UserWrappedHistory, wrap_id=wrap_id)
-    wrap.delete()
-
-
 def rename_wrap(request, wrap_id):
     if request.method == "POST":
         new_name = request.POST.get("new_name")
@@ -358,21 +366,45 @@ def rename_wrap(request, wrap_id):
 @login_required
 def delete_account(request):
     if request.method == "POST":
-        user = request.user
-
-        # Get all wraps associated with the user's ID
-        wraps = UserWrappedHistory.objects.filter(user_id=user.id)  # Filter by user_id
-
-        if wraps.exists():
-            for wrap in wraps:
-                wrap.delete()  # Delete each wrap
-
-        # Now delete the user account
-        user.delete()
-
-        # Log the user out and redirect to the home page
-        logout(request)
-        return redirect('home')
-
-    # If it's a GET request, render the confirmation page
-    return render(request, 'profile/confirm_delete_account.html')
+        # Get the Spotify User ID from the session or user profile
+        try:
+            # Attempt to get Spotify user data
+            spotify_user_data = get_spotify_data(request, "long_term")
+            spotify_user_id = spotify_user_data["profile"].get("id", "Unknown")
+            
+            # Print out for debugging
+            print(f"Deleting wraps for Spotify User ID: {spotify_user_id}")
+            
+            # Find and delete the wraps
+            wraps_to_delete = UserWrappedHistory.objects.filter(user_id=spotify_user_id)
+            
+            # Print out debug information
+            print(f"Number of wraps to delete: {wraps_to_delete.count()}")
+            
+            # Delete the wraps
+            wraps_to_delete.delete()
+            
+            # Verify deletion
+            remaining_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id)
+            print(f"Remaining wraps after deletion: {remaining_wraps.count()}")
+            
+            # Delete the user account
+            request.user.delete()
+            
+            # Log out the user
+            logout(request)
+            
+            # Add a success message
+            messages.success(request, 'Your account and all associated data have been deleted.')
+            
+            # Redirect to home page
+            return redirect('home')
+        
+        except Exception as e:
+            # Log the full error details
+            print(f"Error in delete_account: {str(e)}")
+            messages.error(request, f'Error deleting account: {str(e)}')
+            return redirect('profile')
+    
+    # If not a POST request, redirect back to profile
+    return redirect('profile')
