@@ -6,22 +6,12 @@
 {% block content %}
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;">
     <div>
-        <h2 onclick="window.location.href='{% url 'spotify_login' %}'" 
+        <h2 class = "logbut" onclick="window.location.href='{% url 'spotify_login' %}'" 
             style="cursor: pointer; padding: 20px 40px; font-size: 36px; border-radius: 10px; background-color: #007bff; color: white; transition: all 0.3s ease;">
             Please login to view your Wrapped
         </h2>
     </div>
 </div>
-
-<style>
-    h2:hover {
-        background-color: #0056b3; /* Darker background color on hover */
-        transform: scale(1.1); /* Enlarge the button more on hover */
-    }
-    h2:active {
-        background-color: #004085; /* Even darker background when clic
-
-
 
 
 {% endblock %}

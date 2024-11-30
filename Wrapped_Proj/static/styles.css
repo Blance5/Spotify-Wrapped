@@ -1882,3 +1882,22 @@ h2 {
         transform: translateX(-100vw); /* Move particles across the screen */
     }
 }
+
+.logbut {
+    cursor: pointer;
+    padding: 20px 40px;
+    font-size: 36px;
+    border-radius: 10px;
+    background-color: #007bff;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.logbut:hover {
+    background-color: #0056b3; /* Darker background color on hover */
+    transform: scale(1.1); /* Enlarge the button more on hover */
+}
+
+.logbut:active {
+    background-color: #004085; /* Even darker background when clicked */
+}
