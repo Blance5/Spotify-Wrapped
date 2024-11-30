@@ -10,9 +10,11 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <h2 class="card-title display-6 mb-3">{{ spotify_user_data.profile.display_name }}'s Profile</h2>
+                            <h2 class="card-title display-6 mb-3">
+                                {{ spotify_user_data.profile.display_name }}'s Profile
+                            </h2>
                             <p class="text-muted">
-                                <strong class="text-dark">Email:</strong>
+                                <strong class="text-primary">Email:</strong>
                                 {% if spotify_user_data.profile.email %}
                                     <span class="text-primary">{{ spotify_user_data.profile.email }}</span>
                                 {% else %}
@@ -35,31 +37,27 @@
                         <div class="card h-100 border-0 shadow-sm hover-lift wrap-card">
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h4 class="card-title mb-0 text-dark">
-                                        {{ wrap.display_name|default:wrap.timeframe|title }} 
+                                    <h4 class="card-title mb-0">
+                                        {{ wrap.display_name|default:wrap.timeframe|title }}
                                     </h4>
-                                    <span class="badge bg-primary bg-opacity-10 text-primary">
+                                    <span class="badge">
                                         {{ wrap.timeframe|upper }}
                                     </span>
                                 </div>
-                                <p class="card-text text-muted small">
-                                    <strong class="text-dark">Generated:</strong> 
-                                    {{ wrap.generated_on|date:"F j, Y" }} 
+                                <p class="card-text small">
+                                    <strong>Generated:</strong> 
+                                    {{ wrap.generated_on|date:"F j, Y" }}
                                 </p>
                                 <div class="mt-auto d-flex justify-content-between">
-                                    <!-- Button to display the wrap -->
                                     <a href="{% url 'regenerate_past_wrap' wrap.wrap_id %}" class="btn btn-success">
-                                        <i class="bi bi-arrow-repeat me-2"></i>
-                                        Display Wrapped
+                                        <i class="bi bi-arrow-repeat me-2"></i> Display Wrapped
                                     </a>
-                                    <!-- Delete button -->
                                     <form method="post" action="{% url 'delete_wrap' wrap.wrap_id %}" style="display: inline;">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-danger">
                                             <i class="bi bi-trash"></i> Delete
                                         </button>
                                     </form>
-                                    <!-- Rename button -->
                                     <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#renameModal{{ wrap.wrap_id }}">
                                         <i class="bi bi-pencil"></i> Rename
                                     </button>
@@ -67,7 +65,7 @@
                             </div>
                         </div>
                     </div>
-                
+
                     <!-- Rename Modal -->
                     <div class="modal fade" id="renameModal{{ wrap.wrap_id }}" tabindex="-1" aria-labelledby="renameModalLabel{{ wrap.wrap_id }}" aria-hidden="true">
                         <div class="modal-dialog">
@@ -95,8 +93,7 @@
                 {% empty %}
                     <div class="col-12">
                         <div class="alert alert-info text-center" role="alert">
-                            <i class="bi bi-inbox me-2"></i>
-                            No past wraps available
+                            <i class="bi bi-inbox me-2"></i> No past wraps available
                         </div>
                     </div>
                 {% endfor %}
@@ -104,33 +101,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    /* Custom hover effect for cards */
-    .hover-lift {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .hover-lift:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175) !important;
-    }
-
-    /* Add border around each wrap card */
-    .wrap-card {
-        border: 2px solid #007bff; /* Blue border */
-        border-radius: 10px; /* Rounded corners */
-        padding: 10px;
-    }
-
-    /* Ensure content doesn't run into footer */
-    body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
-    main {
-        flex: 1;
-        padding-bottom: 100px; /* Additional bottom padding */
-    }
-</style>
 {% endblock %}

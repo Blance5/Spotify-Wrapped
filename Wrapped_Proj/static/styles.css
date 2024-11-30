@@ -5,6 +5,135 @@ body {
     padding: 0;
 }
 
+/* Define theme variables */
+:root {
+    --bg-light: #ffffff;
+    --bg-dark: #121212;
+    --text-light: #000000;
+    --text-dark: #ffffff;
+    --card-bg-light: #f8f9fa;
+    --card-bg-dark: #1e1e1e;
+    --primary-light: #007bff;
+    --primary-dark: #90caf9;
+}
+
+/* General styling for text colors */
+.card-title,
+.card-text,
+.card h2,
+.card p {
+    color: var(--text-light);
+}
+
+body.dark-mode .card-title,
+body.dark-mode .card-text,
+body.dark-mode .card h2,
+body.dark-mode .card p {
+    color: var(--text-dark);
+}
+
+.modal-content {
+    background-color: var(--card-bg-light);
+    color: var(--text-light);
+}
+
+body.dark-mode .modal-content {
+    background-color: var(--card-bg-dark);
+    color: var(--text-dark);
+}
+
+.modal-content input {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    border: 1px solid var(--text-light);
+}
+
+body.dark-mode .modal-content input {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+    border: 1px solid var(--text-dark);
+}
+
+.modal-footer button {
+    color: var(--text-light);
+}
+
+/* Email text styles */
+.text-muted {
+    color: var(--text-light); /* Default text color in light mode */
+}
+
+body.dark-mode .text-muted {
+    color: var(--text-dark); /* Default text color in dark mode */
+}
+
+.text-dark {
+    color: var(--text-light); /* Ensure dark text switches in light mode */
+}
+
+body.dark-mode .text-dark {
+    color: var(--text-dark); /* Ensure light text switches in dark mode */
+}
+
+/* Badge styles for light and dark mode */
+.badge {
+    color: var(--text-dark); /* Dark text for visibility in light mode */
+    background-color: var(--primary-light); /* Light primary background */
+}
+
+body.dark-mode .badge {
+    color: var(--text-light); /* Light text for visibility in dark mode */
+    background-color: var(--primary-dark); /* Dark primary background */
+}
+
+body.dark-mode .modal-footer button {
+    color: var(--text-dark);
+}
+
+/* Light mode */
+body.light-mode {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+}
+
+/* Email text visibility */
+.text-primary {
+    color: var(--primary-light); /* Light theme primary color */
+}
+
+body.dark-mode .text-primary {
+    color: var(--primary-dark); /* Dark theme primary color */
+}
+
+/* Dark mode */
+body.dark-mode {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* Card styles */
+.card {
+    background-color: var(--card-bg-light);
+    color: var(--text-light);
+}
+
+body.dark-mode .card {
+    background-color: var(--card-bg-dark);
+    color: var(--text-dark);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-light);
+    color: var(--text-light);
+}
+
+body.dark-mode .btn-primary {
+    background-color: var(--primary-dark);
+    color: var(--text-dark);
+}
+
+
 header {
     background-color: #333;
     color: white;
