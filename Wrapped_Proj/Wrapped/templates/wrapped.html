@@ -9,7 +9,7 @@
     <p>Here is your Wrapped!</p>
 
     <!-- Audio Element -->
-    <audio id="globalAudio" preload="auto" controls style="width: 100%; max-width: 400px; height: 40px;">
+    <audio id="globalAudio" preload="auto" style="width: 100%; max-width: 400px; height: 40px;">
         <!-- Initially no track loaded -->
         Your browser does not support the audio element.
     </audio>
@@ -28,6 +28,17 @@
                     },
                 {% endfor %}
             ];  // Array of tracks (name, artist, preview_url)
+
+            // Function to shuffle the array using Fisher-Yates shuffle
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+                }
+            }
+
+            // Shuffle the topTracks array before starting playback
+            shuffleArray(topTracks);
             
             let currentTrackIndex = 0;  // To keep track of the currently playing track
 
@@ -45,6 +56,7 @@
                     audioElement.load();  // Ensure the audio element reloads the new URL
                     audioElement.play().then(() => {
                         console.log('Audio started playing');
+                        audioElement.muted = false;  // Unmute after the first play
                     }).catch((error) => {
                         console.error('Error playing audio:', error);
                     });
@@ -60,8 +72,14 @@
                 currentTrackIndex = (currentTrackIndex + 1) % topTracks.length;
             }
 
-            // Start playing as soon as the page is ready
-            changeTrack();
+            // Start playing after the first click anywhere on the document
+            document.body.addEventListener('click', function() {
+                // Only play the audio on the first click to avoid multiple plays
+                if (audioElement.paused) {
+                    console.log('User clicked, starting audio playback');
+                    changeTrack();  // Start the playback after user click
+                }
+            });
 
             // Listen for the 'ended' event to play the next track when the current one finishes
             audioElement.addEventListener('ended', function() {
