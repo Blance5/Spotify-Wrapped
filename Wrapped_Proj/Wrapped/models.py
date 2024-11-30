@@ -35,6 +35,13 @@ class UserWrappedHistory(models.Model):
 
     wrap_id = models.PositiveIntegerField(null=True, blank=True)  # Wrap ID (no longer unique=True)
 
+    display_name = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        help_text="A user-friendly name for the wrap."
+    )  # New field to store the display name
+
     def save(self, *args, **kwargs):
         if not self.wrap_id:
             # We ensure that the wrap_id is unique for the user_id and timeframe combination
@@ -45,6 +52,10 @@ class UserWrappedHistory(models.Model):
                 if not UserWrappedHistory.objects.filter(user_id=self.user_id, timeframe=self.timeframe, wrap_id=self.wrap_id).exists():
                     break  # If the wrap_id doesn't exist, break out of the loop
 
+        # Set a default display_name if it is not provided
+        if not self.display_name:
+            self.display_name = f"{self.timeframe.replace('_', ' ').title()}"
+
         super().save(*args, **kwargs)
 
     generated_on = models.DateTimeField(auto_now_add=True)  # Store the date and time when created
@@ -54,4 +65,3 @@ class UserWrappedHistory(models.Model):
 
     class Meta:
         unique_together = ('user_id', 'timeframe', 'wrap_id')  # Unique combination of user_id, timeframe, and wrap_id
-

@@ -32,24 +32,63 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 {% for wrap in past_wraps %}
                     <div class="col">
-                        <div class="card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card h-100 border-0 shadow-sm hover-lift wrap-card">
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h4 class="card-title mb-0 text-dark">{{ wrap.timeframe|title }} Wrap</h4>
+                                    <h4 class="card-title mb-0 text-dark">
+                                        {{ wrap.display_name|default:wrap.timeframe|title }} 
+                                    </h4>
                                     <span class="badge bg-primary bg-opacity-10 text-primary">
                                         {{ wrap.timeframe|upper }}
                                     </span>
                                 </div>
                                 <p class="card-text text-muted small">
                                     <strong class="text-dark">Generated:</strong> 
-                                    {{ wrap.generated_on|date:"F j, Y" }} at {{ wrap.generated_on|time:"H:i" }}
+                                    {{ wrap.generated_on|date:"F j, Y" }} 
                                 </p>
-                                <div class="mt-auto">
-                                    <a href="{% url 'regenerate_past_wrap' wrap.wrap_id %}" class="btn btn-success w-100 d-flex align-items-center justify-content-center">
+                                <div class="mt-auto d-flex justify-content-between">
+                                    <!-- Button to display the wrap -->
+                                    <a href="{% url 'regenerate_past_wrap' wrap.wrap_id %}" class="btn btn-success">
                                         <i class="bi bi-arrow-repeat me-2"></i>
-                                        Display Wrap
+                                        Display Wrapped
                                     </a>
+                                    <!-- Delete button -->
+                                    <form method="post" action="{% url 'delete_wrap' wrap.wrap_id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                    <!-- Rename button -->
+                                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#renameModal{{ wrap.wrap_id }}">
+                                        <i class="bi bi-pencil"></i> Rename
+                                    </button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Rename Modal -->
+                    <div class="modal fade" id="renameModal{{ wrap.wrap_id }}" tabindex="-1" aria-labelledby="renameModalLabel{{ wrap.wrap_id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="renameModalLabel{{ wrap.wrap_id }}">Rename Wrapped</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form method="post" action="{% url 'rename_wrap' wrap.wrap_id %}">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="newName{{ wrap.wrap_id }}" class="form-label">New Name</label>
+                                            <input type="text" class="form-control" id="newName{{ wrap.wrap_id }}" name="new_name" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-warning">Save Changes</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -73,7 +112,14 @@
     }
     .hover-lift:hover {
         transform: translateY(-10px);
-        box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175) !important;
+    }
+
+    /* Add border around each wrap card */
+    .wrap-card {
+        border: 2px solid #007bff; /* Blue border */
+        border-radius: 10px; /* Rounded corners */
+        padding: 10px;
     }
 
     /* Ensure content doesn't run into footer */
