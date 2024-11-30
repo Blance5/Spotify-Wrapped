@@ -3,13 +3,173 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
 }
+
+/* Define theme variables */
+:root {
+    --bg-light: #ffffff;
+    --bg-dark: #121212;
+    --text-light: #000000;
+    --text-dark: #ffffff;
+    --card-bg-light: #f8f9fa;
+    --card-bg-dark: #1e1e1e;
+    --primary-light: #007bff;
+    --primary-dark: #90caf9;
+}
+
+/* General styling for text colors */
+.card-title,
+.card-text,
+.card h2,
+.card p {
+    color: var(--text-light);
+}
+
+body.dark-mode .card-title,
+body.dark-mode .card-text,
+body.dark-mode .card h2,
+body.dark-mode .card p {
+    color: var(--text-dark);
+}
+
+.modal-content {
+    background-color: var(--card-bg-light);
+    color: var(--text-light);
+}
+
+body.dark-mode .modal-content {
+    background-color: var(--card-bg-dark);
+    color: var(--text-dark);
+}
+
+.modal-content input {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    border: 1px solid var(--text-light);
+}
+
+body.dark-mode .modal-content input {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+    border: 1px solid var(--text-dark);
+}
+
+.modal-footer button {
+    color: var(--text-light);
+}
+
+/* Email text styles */
+.text-muted {
+    color: var(--text-light); /* Default text color in light mode */
+}
+
+body.dark-mode .text-muted {
+    color: var(--text-dark); /* Default text color in dark mode */
+}
+
+.text-dark {
+    color: var(--text-light); /* Ensure dark text switches in light mode */
+}
+
+body.dark-mode .text-dark {
+    color: var(--text-dark); /* Ensure light text switches in dark mode */
+}
+
+/* Badge styles for light and dark mode */
+.badge {
+    color: var(--text-dark); /* Dark text for visibility in light mode */
+    background-color: var(--primary-light); /* Light primary background */
+}
+
+body.dark-mode .badge {
+    color: var(--text-light); /* Light text for visibility in dark mode */
+    background-color: var(--primary-dark); /* Dark primary background */
+}
+
+body.dark-mode .modal-footer button {
+    color: var(--text-dark);
+}
+
+/* Light mode */
+body.light-mode {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+}
+
+/* Email text visibility */
+.text-primary {
+    color: var(--primary-light); /* Light theme primary color */
+}
+
+body.dark-mode .text-primary {
+    color: var(--primary-dark); /* Dark theme primary color */
+}
+
+/* Dark mode */
+body.dark-mode {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* Card styles */
+.card {
+    background-color: var(--card-bg-light);
+    color: var(--text-light);
+}
+
+body.dark-mode .card {
+    background-color: var(--card-bg-dark);
+    color: var(--text-dark);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-light);
+    color: var(--text-light);
+}
+
+body.dark-mode .btn-primary {
+    background-color: var(--primary-dark);
+    color: var(--text-dark);
+}
+
 
 header {
     background-color: #333;
     color: white;
     padding: 1rem;
     text-align: center;
+    flex-shrink: 0; /* Prevent shrinking on scroll */
+}
+
+/* Align the logo and Wrapped text properly */
+header img {
+    height: 40px; /* Smaller height for the logo */
+    margin-right: 10px; /* Space between the logo and text */
+    width: auto; /* Maintain aspect ratio */
+    vertical-align: middle; /* Align the logo vertically with the text */
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle; /* Align text with the logo */
+}
+
+/* For responsive design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    header img {
+        height: 35px; /* Slightly smaller on smaller screens */
+        margin-right: 8px;
+    }
 }
 
 nav ul {
@@ -34,12 +194,12 @@ footer {
     padding: 0.5rem; /* Reduced padding */
     font-size: 0.875rem; /* Smaller font size */
     text-align: center;
-    position: fixed;
+    margin-top: 200px;
+    position: relative;
     bottom: 0;
     width: 100%;
     line-height: 1.5; /* Adjust line height for readability */
 }
-
 
 /* Center and size carousel items */
 .carousel-item {
@@ -59,21 +219,229 @@ footer {
     border-radius: 15px;
 }
 
-/* Unique background gradients for each carousel item */
-.carousel-item:nth-child(1) {
+/* Targeting carousel items by their id */
+#topArtistsSlide {
     background: linear-gradient(45deg, #ff5f6d, #ffc371);
 }
 
-.carousel-item:nth-child(2) {
+#topSongsSlide {
     background: linear-gradient(45deg, #6a11cb, #2575fc);
 }
 
-.carousel-item:nth-child(3) {
+#topPlaylistsSlide {
     background: linear-gradient(45deg, #00c9ff, #92fe9d);
 }
 
-.carousel-item:nth-child(4) {
+#listeningPersonalitySlide {
     background: linear-gradient(45deg, #fddb92, #d1fdff);
+}
+
+#allAboutYouSlide {
+    background: linear-gradient(45deg, #6a5acd, #483d8b); /* Slateblue gradient */
+}
+
+/* Slide 6: "How Basic is Your Music Taste?" */
+#musicTasteSlide {
+    background: linear-gradient(45deg, #00b0ff, #f44336); /* Fun gradient for a playful vibe */
+    color: white;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    height: 65vh; /* Match height of other slides */
+    max-height: 500px; /* Max height of other slides */
+    width: 90vw; /* Match width of other slides */
+    max-width: 600px; /* Max width of other slides */
+    margin: auto; /* Center the slide */
+}
+
+#musicTasteSlide .content {
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+}
+
+#musicTasteSlide h2 {
+    font-size: 2.5rem; /* Reduced font size */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    color: white;
+    margin-bottom: 20px;
+    animation: textPop 1s ease-out forwards; /* Text pop-in effect */
+}
+
+#musicTasteSlide .intro {
+    font-size: 1.2rem; /* Reduced font size */
+    color: white;
+    margin-bottom: 30px;
+    animation: fadeInUp 1.5s ease-out forwards; /* Fade-in for intro text */
+}
+
+#musicTasteSlide .top-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 1rem; /* Reduced font size */
+    animation: fadeInUp 2s ease-out forwards; /* Animation for list */
+}
+
+#musicTasteSlide .top-list li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: listFadeIn 0.5s ease-out forwards; /* Fade-in with staggered timing */
+}
+
+#musicTasteSlide .top-list li:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+#musicTasteSlide .top-list li:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+#musicTasteSlide .top-list li:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+#musicTasteSlide .top-list li:nth-child(4) {
+    animation-delay: 0.8s;
+}
+
+#musicTasteSlide .top-list li:nth-child(5) {
+    animation-delay: 1s;
+}
+
+#musicTasteSlide .top-list img {
+    width: 35px; /* Reduced image size */
+    height: 35px; /* Reduced image size */
+    border-radius: 50%;
+    margin-right: 15px;
+    transition: transform 0.3s ease; /* Hover effect for artist images */
+}
+
+#musicTasteSlide .top-list img:hover {
+    transform: scale(1.2); /* Scale up on hover */
+}
+
+#musicTasteSlide .popularity-score {
+    font-size: 1.2rem; /* Reduced font size */
+    margin-top: 20px;
+    font-weight: 700;
+    color: white;
+    animation: fadeInUp 2.5s ease-out forwards;
+}
+
+#musicTasteSlide #popularityScore {
+    font-size: 1.8rem; /* Reduced font size */
+    color: #ffeb3b; /* Yellow highlight for score */
+}
+
+#musicTasteSlide .music-message {
+    margin-top: 20px;
+    font-size: 1.2rem; /* Reduced font size */
+    font-weight: 700;
+    color: white;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 3s ease-out forwards;
+}
+
+#musicTasteSlide #musicTaste {
+    color: #ffeb3b; /* Yellow color for the message part */
+}
+
+/* Animations */
+
+/* Text pop-in */
+@keyframes textPop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Fade-in for intro and content */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-in list items with staggered effect */
+@keyframes listFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover effect for the music message */
+#musicTasteSlide #musicTasteMessage:hover p {
+    color: #ffeb3b; /* Color change on hover */
+    transform: scale(1.1);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    #musicTasteSlide h2 {
+        font-size: 2.2rem; /* Reduced font size for mobile */
+    }
+
+    #musicTasteSlide .intro {
+        font-size: 1rem; /* Adjusted intro font size */
+    }
+
+    #musicTasteSlide .top-list li {
+        font-size: 0.9rem; /* Adjusted list font size */
+    }
+
+    #musicTasteSlide .popularity-score {
+        font-size: 1rem; /* Adjusted score font size */
+    }
+
+    #musicTasteSlide #popularityScore {
+        font-size: 1.4rem; /* Adjusted score font size */
+    }
+}
+
+@media (max-width: 480px) {
+    #musicTasteSlide h2 {
+        font-size: 1.8rem; /* Further reduced font size for small screens */
+    }
+
+    #musicTasteSlide .top-list li {
+        font-size: 0.8rem; /* Further reduced list font size */
+    }
+
+    #musicTasteSlide .popularity-score {
+        font-size: 0.9rem; /* Further reduced score font size */
+    }
+
+    #musicTasteSlide #popularityScore {
+        font-size: 1.2rem; /* Further reduced score font size */
+    }
 }
 
 @keyframes fadeInUp {
@@ -187,6 +555,9 @@ h2 {
     .personality-card {
         padding: 1rem;
     }
+    .description-box {
+        max-width: 80%; /* Wider box for smaller screens */
+    }
 }
 
 @media (max-width: 480px) {
@@ -201,5 +572,565 @@ h2 {
     .top-list img {
         width: 30px;
         height: 30px;
+    }
+}
+
+
+/* Background gradients for the transition slide */
+#transitionMagicSlide {
+    background: linear-gradient(45deg, #6a5acd, #483d8b); /* Slateblue gradient for transition slide */
+    overflow: hidden;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    animation: movingBackground 15s linear infinite; /* Animate the background gradient */
+}
+
+/* The Tunnel Effect */
+#transitionMagicSlide .tunnel-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 0, 150, 0.5), rgba(0, 255, 255, 0.5), rgba(0, 255, 0, 0.5), rgba(255, 255, 0, 0.5));
+    transform: translate(-50%, -50%);
+    animation: tunnelEffect 5s linear infinite;
+    filter: blur(15px);
+    z-index: 1;
+}
+
+/* Background gradient movement */
+@keyframes movingBackground {
+    0% {
+        background: linear-gradient(45deg, #6a5acd, #483d8b);
+    }
+    50% {
+        background: linear-gradient(135deg, #483d8b, #6a5acd);
+    }
+    100% {
+        background: linear-gradient(45deg, #6a5acd, #483d8b);
+    }
+}
+
+/* Glitchy Text Effect for "Wait for it" */
+#transitionMagicSlide h2 {
+    font-size: 4rem; /* Make the text larger */
+    font-weight: bold;
+    color: white; /* Static white color */
+    animation: glitchEffect 1s infinite; /* Apply glitch effect */
+    position: relative;
+    z-index: 10;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 0 rgba(0, 255, 255, 0.8), -2px 0 rgba(255, 0, 255, 0.8); /* Additional cool text shadows */
+}
+
+/* Enhanced Glitch Effect */
+@keyframes glitchEffect {
+    0% {
+        text-shadow: 1px 0 red, -1px 0 blue, 0 2px green, 0 -2px yellow;
+        transform: skew(0deg);
+    }
+    20% {
+        text-shadow: -1px 0 red, 1px 0 blue, 2px 0 green, -2px 0 yellow;
+        transform: skew(-5deg);
+    }
+    40% {
+        text-shadow: 2px 0 red, -2px 0 blue, 1px 2px green, -1px -2px yellow;
+        transform: skew(5deg);
+    }
+    60% {
+        text-shadow: -2px 0 red, 2px 0 blue, 0 2px green, 0 -2px yellow;
+        transform: skew(-5deg);
+    }
+    80% {
+        text-shadow: 1px 0 red, -1px 0 blue, 2px 2px green, -2px -2px yellow;
+        transform: skew(3deg);
+    }
+    100% {
+        text-shadow: 1px 0 red, -1px 0 blue, 0 2px green, 0 -2px yellow;
+        transform: skew(0deg);
+    }
+}
+
+/* Parallax Effect */
+@keyframes parallaxEffect {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Parallax effect applied to tunnel */
+#transitionMagicSlide .tunnel-background {
+    animation: parallaxEffect 15s linear infinite;
+}
+
+/* General content layout */
+#transitionMagicSlide .content {
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#transitionMagicSlide h2 {
+    font-size: 4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: fadeInText 2s ease-in-out forwards;
+}
+
+/* Flip effect for text */
+#transitionMagicSlide .transition-box {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    animation: fadeInText 2s ease-in-out forwards;
+}
+
+#transitionMagicSlide .flip-text {
+    font-size: 2rem;
+    margin: 0 10px;
+    animation: flipText 1.5s infinite;
+}
+
+@keyframes flipText {
+    0% {
+        transform: rotateY(0deg);
+    }
+    50% {
+        transform: rotateY(180deg);
+    }
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+
+/* Fade-in Text Animation */
+@keyframes fadeInText {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Transition Slide: Between Top Tracks and Top Playlists */
+#transitionBetweenTopSlides {
+    background: #282c34; /* Dark background for contrast */
+    color: white;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    height: 65vh; /* Match height of other slides */
+    max-height: 500px;
+    width: 90vw; /* Match width of other slides */
+    max-width: 600px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    border-radius: 15px;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+/* Particle Effect */
+#transitionBetweenTopSlides .particles {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1), rgba(255, 0, 150, 0.5), rgba(0, 255, 255, 0.5));
+    border-radius: 50%;
+    animation: particlesEffect 5s linear infinite;
+    filter: blur(10px);
+    z-index: 1;
+}
+
+/* Text and Heading Animations */
+#transitionBetweenTopSlides .heading {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: slideAndRotate 3s ease-out forwards;
+}
+
+#transitionBetweenTopSlides .description {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    animation: slideUp 2s ease-out forwards;
+}
+
+/* Slide and Rotate animation for Heading */
+@keyframes slideAndRotate {
+    0% {
+        transform: translateY(-100px) rotate(-360deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0) rotate(0);
+        opacity: 1;
+    }
+}
+
+/* Slide-Up animation for Description */
+@keyframes slideUp {
+    0% {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Particle Explosion Effect */
+@keyframes particlesEffect {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+}
+
+/* 3D Rotation Effect for Hover */
+#transitionBetweenTopSlides .content:hover {
+    transform: rotateY(20deg) rotateX(20deg);
+    transition: transform 1s ease-in-out;
+}
+
+/* Fading effect for entire content */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Adding some shadow and blur for dynamic effect */
+#transitionBetweenTopSlides .heading {
+    text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* Adding some interactivity for particles: expand when hovered */
+#transitionBetweenTopSlides .particles:hover {
+    animation: particlesExpand 2s ease-in-out forwards;
+}
+
+/* Expanding particle effect when hovered */
+@keyframes particlesExpand {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+
+/* Styling for the Top Genres Slide */
+#topGenresSlide {
+    position: relative;
+    background: linear-gradient(145deg, #6a11cb, #2575fc); /* Cool gradient background */
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    text-align: center;
+    color: #fff;
+    min-height: 300px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Ensure vertical stacking of content */
+    transition: transform 0.3s ease-in-out;
+    max-width: 100%; /* Make sure it doesn't overflow the container */
+}
+
+/* Adding a slight scale effect on hover */
+#topGenresSlide:hover {
+    transform: scale(1.05);
+}
+
+.carousel-item#allAboutYouSlide {
+    overflow: hidden;
+}
+
+.carousel-item#allAboutYouSlide .content {
+    overflow: hidden;
+}
+
+.carousel-item#allAboutYouSlide .profile-info {
+    overflow: hidden;
+}
+
+/* Styling the content inside the slide */
+#topGenresSlide .content {
+    max-width: 800px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* The header of the genres slide */
+#topGenresSlide h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;  /* Reduced font size */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;  /* Reduced margin */
+    animation: fadeIn 1s ease-out;
+}
+
+/* The description text for the intro */
+#topGenresSlide .intro {
+    font-size: 1rem;  /* Reduced font size */
+    font-weight: 300;
+    opacity: 0.8;
+    margin-bottom: 20px;  /* Reduced margin */
+    animation: fadeIn 1.5s ease-out;
+}
+
+/* List styling for the genres */
+#topGenresList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;  /* Reduced gap */
+    padding: 0;
+    list-style-type: none;
+    margin: 0;
+}
+
+/* Individual genre item styling */
+#topGenresList li {
+    font-size: 1.2rem;  /* Reduced font size */
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;  /* Reduced padding */
+    border-radius: 25px;
+    text-transform: capitalize;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+    position: relative;
+    flex: 0 1 auto; /* Ensure the items shrink and wrap nicely */
+}
+
+/* Hover effect on genres */
+#topGenresList li:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation for list items */
+#topGenresList li:nth-child(even) {
+    animation: fadeInUp 1.5s ease-out 0.5s forwards;
+}
+
+#topGenresList li:nth-child(odd) {
+    animation: fadeInUp 1.5s ease-out 0.7s forwards;
+}
+
+/* Cool effects when no genres are available */
+#topGenresList li.no-data {
+    font-size: 1.2rem;  /* Reduced font size */
+    font-weight: bold;
+    color: #ff5f5f;
+    text-transform: none;
+    background: rgba(255, 0, 0, 0.1);
+    padding: 12px 24px;  /* Reduced padding */
+    border-radius: 30px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Add some sparkle effect for the intro (optional) */
+#topGenresSlide .intro {
+    position: relative;
+}
+
+#topGenresSlide .intro:before {
+    content: '✨';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    animation: sparkle 1.5s infinite;
+}
+
+@keyframes sparkle {
+    0% {
+        transform: rotate(0deg) scale(0.8);
+        opacity: 0.5;
+    }
+    50% {
+        transform: rotate(360deg) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(720deg) scale(0.8);
+        opacity: 0.5;
+    }
+}
+
+
+#introSlide {
+    position: relative;
+    background: linear-gradient(45deg, #6a11cb, #2575fc); /* Gradient background */
+    color: white;
+    text-align: center;
+    padding: 40px 20px; /* Adjust padding to match other slides */
+    height: 65vh; /* Match height of other slides */
+    max-height: 500px; /* Prevent slide from getting too tall */
+    width: 90vw; /* Match width of other slides */
+    max-width: 600px; /* Prevent slide from getting too wide */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 15px; /* Rounded corners for consistent styling */
+    animation: gradientAnimation 6s ease-in-out infinite;
+}
+
+#introSlide .content {
+    z-index: 2; /* Ensure text is above particles */
+    max-width: 80%;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInText 2s ease-out 1s forwards; /* Fade-in text animation */
+}
+
+#introSlide h2 {
+    font-size: 2.5rem; /* Reduced font size to fit with other slide text */
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    animation: slideUp 1s ease-out forwards;
+}
+
+#introSlide p {
+    font-size: 1.2rem; /* Reduced font size to fit with other slide text */
+    font-family: 'Arial', sans-serif;
+    font-weight: normal;
+    animation: fadeUp 2s ease-out 1s forwards; /* Fade-up paragraph animation */
+}
+
+#introSlide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://cdn.pixabay.com/photo/2016/03/26/13/09/particles-1284141_960_720.png') repeat;
+    opacity: 0.15;
+    pointer-events: none;
+    animation: moveParticles 4s linear infinite; /* Animated particle effect */
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background: linear-gradient(45deg, #6a11cb, #2575fc);
+    }
+    50% {
+        background: linear-gradient(45deg, #ff6a00, #ee0979); /* Change color midway */
+    }
+    100% {
+        background: linear-gradient(45deg, #6a11cb, #2575fc);
+    }
+}
+
+@keyframes fadeInText {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes moveParticles {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100vw); /* Move particles across the screen */
     }
 }
