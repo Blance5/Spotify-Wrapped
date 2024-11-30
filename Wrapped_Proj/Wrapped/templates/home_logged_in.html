@@ -6,27 +6,32 @@
 {% block content %}
 
 {% if spotify_user_data %}
-    <h3>Welcome, {{ spotify_user_data.profile.display_name }}!</h3>
-    <p>Email: {{ spotify_user_data.profile.email }}</p>
-    <p>What have you been Listening to?</p>
-
-    
+<div style="text-align: center; max-width: 800px; margin: 0 auto; padding: 20px;">
+    <h3 style="margin-bottom: 20px;">Welcome, {{ spotify_user_data.profile.display_name }}!</h3>
+    <p style="margin-bottom: 15px;">Email: {{ spotify_user_data.profile.email }}</p>
+    <p style="margin-bottom: 30px; font-style: italic;">What have you been Listening to?</p>
 
     <!-- Dropdown for selecting term -->
-    <section>
-        <h3>Select Time-Frame for Wrapped</h3>
-        <form method="GET" action="{% url 'wrapped' %}" id="term-form">
-            <label for="term">Choose a term:</label>
-            <select id="term" name="term">
-                <option value="short_term" {% if selected_term == 'short_term' %}selected{% endif %}>Short Term</option>
-                <option value="medium_term" {% if selected_term == 'medium_term' %}selected{% endif %}>Medium Term</option>
-                <option value="long_term" {% if selected_term == 'long_term' %}selected{% endif %}>Long Term</option>
-            </select>
+    <section style="padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="margin-bottom: 20px;">Select Time-Frame for Wrapped</h3>
+        <form method="GET" action="{% url 'wrapped' %}" id="term-form" style="display: flex; flex-direction: column; align-items: center;">
+            <div style="margin-bottom: 20px; width: 100%; max-width: 300px;">
+                <label for="term" style="display: block; margin-bottom: 10px;">Choose a term:</label>
+                <select id="term" name="term" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ced4da; background-color: transparent;">
+                    <option value="short_term" {% if selected_term == 'short_term' %}selected{% endif %}>Short Term</option>
+                    <option value="medium_term" {% if selected_term == 'medium_term' %}selected{% endif %}>Medium Term</option>
+                    <option value="long_term" {% if selected_term == 'long_term' %}selected{% endif %}>Long Term</option>
+                </select>
+            </div>
 
             <!-- Button to go to Wrapped page -->
-            <button type="submit" class="btn btn-primary">Go To Your Wrapped</button>
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px; font-size: 16px; border-radius: 5px;">
+                Go To Your Wrapped
+            </button>
         </form>
     </section>
+</div>
+
 
     
 {% else %}

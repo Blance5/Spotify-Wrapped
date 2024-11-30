@@ -5,8 +5,13 @@
 {% block content %}
 
 {% if spotify_user_data %}
-    <h3>Welcome, {{ spotify_user_data.profile.display_name }}!</h3>
-    <p>Here is your Wrapped!</p>
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 15px; text-align: center;">
+        <div>
+            <h3>Welcome, {{ spotify_user_data.profile.display_name }}!</h3>
+            <p>Here is your Wrapped!</p>
+        </div>
+    </div>
+
 
     <!-- Audio Element -->
     <audio id="globalAudio" preload="auto" style="width: 100%; max-width: 400px; height: 40px;">

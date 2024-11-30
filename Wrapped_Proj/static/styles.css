@@ -34,6 +34,18 @@ body.dark-mode .card p {
     color: var(--text-dark);
 }
 
+body.dark-mode select {
+    background-color: #333; /* Dark background for the dropdown */
+    color: var(--text-dark); /* Change text color for the dropdown */
+    border: 1px solid #555; /* Darker border for the dropdown */
+}
+
+body.dark-mode select option {
+    background-color: #333; /* Dark background for the options */
+    color: var(--text-dark); /* White text for the options */
+}
+
+
 .modal-content {
     background-color: var(--card-bg-light);
     color: var(--text-light);
