@@ -1,5 +1,59 @@
 import requests
 from django.templatetags.static import static
+from bs4 import BeautifulSoup
+
+def fetch_preview_url(track_id):
+    """
+    Fetch the preview URL for a track using its Spotify embed page.
+    """
+    embed_url = f"https://open.spotify.com/embed/track/{track_id}"
+    
+    try:
+        # Make a request to fetch the embed page HTML
+        response = requests.get(embed_url)
+        if response.status_code != 200:
+            print(f"Failed to fetch embed page for track {track_id}: {response.status_code}")
+            return None
+
+        html = response.text
+        soup = BeautifulSoup(html, "html.parser")
+        
+        # Look for the <script> elements that contain the preview URL
+        script_elements = soup.find_all('script')
+        for script in script_elements:
+            script_content = script.string
+            if script_content and "audioPreview" in script_content:
+                # This is the step where you would parse the JSON for the preview URL
+                return extract_preview_url_from_script(script_content)
+    except Exception as e:
+        print(f"Error fetching or parsing the embed page for track {track_id}: {e}")
+    
+    return None
+
+def extract_preview_url_from_script(script_content):
+    """
+    Extracts the preview URL for the audio from the JavaScript content.
+    """
+    # Look for the part of the script that contains the preview URL
+    try:
+        # Find the 'audioPreview' URL using a basic string search
+        # A more robust solution would involve JSON parsing
+        start_idx = script_content.find('audioPreview')
+        if start_idx == -1:
+            return None
+        
+        # Extract the substring containing the URL
+        start_idx = script_content.find('"url":', start_idx)
+        end_idx = script_content.find('"', start_idx + 7)
+        preview_url = script_content[start_idx + 7:end_idx]
+        
+        return preview_url
+    except Exception as e:
+        print(f"Error extracting preview URL: {e}")
+        return None
+
+
+
 
 
 def refresh_access_token(refresh_token, client_id, client_secret):
@@ -81,14 +135,28 @@ def get_spotify_data(request, term):
         top_tracks_response = requests.get(
             "https://api.spotify.com/v1/me/top/tracks",
             headers=headers,
-            params={"limit": 8,
-                    "time_range": term}
+            params={"limit": 8, "time_range": term, "market": "US"}
         )
         top_tracks_response.raise_for_status()
-        data["top_tracks"] = [
-            {"name": track["name"], "artist": track["artists"][0]["name"]}
-            for track in top_tracks_response.json().get("items", [])
-        ]
+        
+        top_tracks = top_tracks_response.json().get("items", [])
+        
+        # Fetch preview URLs for each track using embed page
+        tracks_with_preview = []
+        for track in top_tracks:
+            track_id = track["id"]
+            
+            # Fetch the preview URL from the embed page (using the previously defined fetch_preview_url function)
+            preview_url = fetch_preview_url(track_id)
+            print("\n\n\n\n\n\n@@@@@@@@@@@2", preview_url)
+            tracks_with_preview.append({
+                "name": track["name"], 
+                "artist": track["artists"][0]["name"],
+                "preview_url": preview_url  # Add the fetched preview URL here
+            })
+
+        data["top_tracks"] = tracks_with_preview
+
         print("Top Tracks:", data["top_tracks"])
     except Exception as e:
         print("Error fetching top tracks:", str(e))

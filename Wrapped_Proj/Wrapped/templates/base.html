@@ -14,7 +14,19 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s, color 0.3s;display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures the body fills the entire height of the screen */
+        }
+
+        main {
+            flex-grow: 1;
+            padding-bottom: 60px; /* Ensure there's space for the footer */
+        }
+
+        footer {
+            padding: 1rem 0;
+            flex-shrink: 0; /* Prevents the footer from shrinking */
         }
 
         /* Light mode styles */
