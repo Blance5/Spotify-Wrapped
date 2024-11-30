@@ -1,10 +1,9 @@
 # home/views.py
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from allauth.account.views import EmailView
 from allauth.account.views import LogoutView
 from django.views.generic import TemplateView
 from django.contrib.auth import logout
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from .spotify_service import get_spotify_data
 import requests
@@ -320,3 +319,22 @@ def logout_view(request):
     request.session.flush()
     logout(request)
     return redirect('home_redirect')  # Redirect to home page after logout
+
+
+def delete_wrap(request, wrap_id):
+    if request.method == "POST":
+        # Find and delete the wrap by wrap_id
+        wrap = get_object_or_404(UserWrappedHistory, wrap_id=wrap_id)
+        wrap.delete()
+
+    # Redirect back to the profile page
+    return redirect('profile')
+
+def rename_wrap(request, wrap_id):
+    if request.method == "POST":
+        new_name = request.POST.get("new_name")
+        wrap = get_object_or_404(UserWrappedHistory, wrap_id=wrap_id)
+        wrap.name = new_name  # Update the name
+        wrap.display_name = new_name  # Update the display name
+        wrap.save()
+    return redirect('profile')

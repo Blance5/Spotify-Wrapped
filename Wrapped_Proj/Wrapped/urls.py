@@ -17,6 +17,9 @@ urlpatterns = [
     path('profile/', profile_view, name='profile'),  # Add the profile URL here
     path('', views.home_redirect, name='home_redirect'),  # Home page view
     path('contact/', views.contact, name='contact'),
+    path('delete_wrap/<int:wrap_id>/', views.delete_wrap, name='delete_wrap'),
+    path('rename_wrap/<int:wrap_id>/', views.rename_wrap, name='rename_wrap'),
+
 ]
 
 # Optionally include debug toolbar routes during development
