@@ -8,12 +8,101 @@
     <h3>Welcome, {{ spotify_user_data.profile.display_name }}!</h3>
     <p>Here is your Wrapped!</p>
 
+    <!-- Audio Element -->
+    <audio id="globalAudio" preload="auto" style="width: 100%; max-width: 400px; height: 40px;">
+        <!-- Initially no track loaded -->
+        Your browser does not support the audio element.
+    </audio>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let audioElement = document.getElementById('globalAudio');
+            
+            // Prepare an array of track objects with name, artist, and preview URL
+            let topTracks = [
+                {% for track in top_tracks %}
+                    { 
+                        name: "{{ track.name }}", 
+                        artist: "{{ track.artist }}", 
+                        preview_url: "{{ track.preview_url }}" 
+                    },
+                {% endfor %}
+            ];  // Array of tracks (name, artist, preview_url)
+
+            // Function to shuffle the array using Fisher-Yates shuffle
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+                }
+            }
+
+            // Shuffle the topTracks array before starting playback
+            shuffleArray(topTracks);
+            
+            let currentTrackIndex = 0;  // To keep track of the currently playing track
+
+            // Function to change the track in the global audio element
+            function changeTrack() {
+                // Find the next track with a valid preview URL
+                let track = topTracks[currentTrackIndex];
+                
+                // If the track has a valid preview URL, play it
+                if (track.preview_url) {
+                    console.log('Playing:', track.name, 'by', track.artist, 'URL:', track.preview_url);
+                    audioElement.src = track.preview_url;
+
+                    // Make sure the audio element is not already playing
+                    audioElement.load();  // Ensure the audio element reloads the new URL
+                    audioElement.play().then(() => {
+                        console.log('Audio started playing');
+                        audioElement.muted = false;  // Unmute after the first play
+                    }).catch((error) => {
+                        console.error('Error playing audio:', error);
+                    });
+                } else {
+                    // If the preview URL is invalid, skip this track
+                    console.log("Skipping track:", track.name);
+                    currentTrackIndex = (currentTrackIndex + 1) % topTracks.length;
+                    changeTrack();  // Try playing the next track
+                    return;  // Skip to the next iteration without playing this track
+                }
+
+                // Update the current track index (loop through tracks)
+                currentTrackIndex = (currentTrackIndex + 1) % topTracks.length;
+            }
+
+            // Start playing after the first click anywhere on the document
+            document.body.addEventListener('click', function() {
+                // Only play the audio on the first click to avoid multiple plays
+                if (audioElement.paused) {
+                    console.log('User clicked, starting audio playback');
+                    changeTrack();  // Start the playback after user click
+                }
+            });
+
+            // Listen for the 'ended' event to play the next track when the current one finishes
+            audioElement.addEventListener('ended', function() {
+                console.log('Track ended, changing to the next track');
+                changeTrack();  // Switch to the next track after the current one finishes
+            });
+        });
+    </script>
+
     <!-- Bootstrap Carousel for Spotify User Data -->
     <div id="spotifyCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
 
+            <!-- Introductory Slide: Welcome to Your Wrapped -->
+            <div class="carousel-item active" id="introSlide">
+                <div class="content">
+                    <h2>Welcome to Your Wrapped!</h2>
+                    <p>Ready to discover your top artists, songs, genres, and more? Let's dive into your Wrapped!</p>
+                </div>
+            </div>
+
             <!-- Slide 1: Top Artists -->
-            <div class="carousel-item active" id="topArtistsSlide">
+            <div class="carousel-item" id="topArtistsSlide">
                 <div class="content">
                     <h2>Your Top Artists</h2>
                     <ul class="top-list">
