@@ -18,9 +18,9 @@
             <div style="margin-bottom: 20px; width: 100%; max-width: 300px;">
                 <label for="term" style="display: block; margin-bottom: 10px;">Choose a term:</label>
                 <select id="term" name="term" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ced4da; background-color: transparent;">
-                    <option value="short_term" {% if selected_term == 'short_term' %}selected{% endif %}>Short Term</option>
-                    <option value="medium_term" {% if selected_term == 'medium_term' %}selected{% endif %}>Medium Term</option>
-                    <option value="long_term" {% if selected_term == 'long_term' %}selected{% endif %}>Long Term</option>
+                    <option value="short_term" {% if selected_term == 'short_term' %}selected{% endif %}>Past Month</option>
+                    <option value="medium_term" {% if selected_term == 'medium_term' %}selected{% endif %}>Past 6 Months</option>
+                    <option value="long_term" {% if selected_term == 'long_term' %}selected{% endif %}>Past Year</option>
                 </select>
             </div>
 
