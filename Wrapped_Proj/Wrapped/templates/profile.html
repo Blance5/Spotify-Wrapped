@@ -47,7 +47,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form method="post" action="{% url 'delete_account' %}">
+                <form method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger">Yes, Delete My Account</button>
                 </form>
