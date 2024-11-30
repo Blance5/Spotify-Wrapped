@@ -25,7 +25,7 @@ SPOTIFY_CLIENT_ID = config('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = config('SPOTIFY_CLIENT_SECRET')
 SPOTIFY_REDIRECT_URI = "http://127.0.0.1:8000/spotify/callback/"
 SPOTIFY_USER_PROFILE_URL = "https://api.spotify.com/v1/me"
-SCOPES = "user-top-read playlist-read-private user-library-read user-read-email"
+SCOPES = "user-top-read playlist-read-private user-library-read user-read-email user-read-private"
 
 #def home_view(request):
  #   return redirect(request, 'home.html')
@@ -122,9 +122,6 @@ def wrapped_view(request):
     if not access_token:
         return redirect('spotify_login')
     try:
-        ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # Replace with actual term that user chooses
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         term = request.GET.get('term', 'long_term')  # Default to 'long_term'
         spotify_user_data = get_spotify_data(request, term)
     except Exception as e:
@@ -135,11 +132,21 @@ def wrapped_view(request):
         print("Error:", e)  # Debugging line
 
     # Extract data or provide default empty lists
+    
     top_artists = spotify_user_data.get('top_artists', [])
     recently_played = spotify_user_data.get('recently_played', [])
     top_tracks = spotify_user_data.get('top_tracks', [])
     playlists = spotify_user_data.get('playlists', [])
     saved_albums = spotify_user_data.get('saved_albums', [])
+    top_track_popularity_score = spotify_user_data.get('top_track_popularity_score', 0)
+    top_track_popularity_message = spotify_user_data.get('top_track_popularity_message', 'Popularity score not available')
+    top_genres = spotify_user_data.get('top_genres', [])
+    profile_data = spotify_user_data["profile"]
+    country = profile_data.get("country", "Unknown")
+    image_url = profile_data.get("image_url", "/static/default_pfp.png")
+    followers = profile_data.get("followers", 0)
+    user_id = profile_data.get("id", "Unknown")
+
 
     return render(request, 'wrapped.html', {
         'spotify_user_data': spotify_user_data,
@@ -148,6 +155,13 @@ def wrapped_view(request):
         'top_tracks': top_tracks,
         'playlists': playlists,
         'saved_albums': saved_albums,
+        'top_track_popularity_score': top_track_popularity_score,
+        'top_track_popularity_message': top_track_popularity_message,
+        'top_genres': top_genres,
+        'country': country,
+        'image_url': image_url,
+        'followers': followers,
+        'user_id': user_id,
     })
 
 @login_required

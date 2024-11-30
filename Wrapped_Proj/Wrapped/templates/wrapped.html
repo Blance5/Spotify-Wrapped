@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block title %}Presenting - Wrapped{% endblock %}
@@ -9,13 +8,12 @@
     <h3>Welcome, {{ spotify_user_data.profile.display_name }}!</h3>
     <p>Here is your Wrapped!</p>
 
-
     <!-- Bootstrap Carousel for Spotify User Data -->
     <div id="spotifyCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-            
+
             <!-- Slide 1: Top Artists -->
-            <div class="carousel-item active">
+            <div class="carousel-item active" id="topArtistsSlide">
                 <div class="content">
                     <h2>Your Top Artists</h2>
                     <ul class="top-list">
@@ -32,7 +30,7 @@
             </div>
 
             <!-- Slide 2: Top Songs -->
-            <div class="carousel-item">
+            <div class="carousel-item" id="topSongsSlide">
                 <div class="content">
                     <h2>Your Top Songs</h2>
                     <ul class="top-list">
@@ -47,8 +45,17 @@
                 </div>
             </div>
 
+            <!-- Transition Slide: Between Top Tracks and Top Playlists -->
+            <div class="carousel-item" id="transitionBetweenTopSlides">
+                <div class="content">
+                    <h2 class="heading">Onto your top playlists!</h2>
+                    <div class="particles"></div>
+                    <p class="description">I've seen more variety in a Spotify "Top 50" playlist...</p>
+                </div>
+            </div>
+
             <!-- Slide 3: Top Playlists -->
-            <div class="carousel-item">
+            <div class="carousel-item" id="topPlaylistsSlide">
                 <div class="content">
                     <h2>Your Top Playlists</h2>
                     <ul class="top-list" style="text-align: center;">
@@ -63,17 +70,82 @@
                 </div>
             </div>
 
-            <!-- Slide 4: Listening Personality -->
-            <div class="carousel-item">
-                <div class="content personality">
-                    <h2 style="color: #333;">Your Listening Personality</h2>
-                    <div class="card personality-card">
-                        <h3>The Adventurer</h3>
-                        <p>You’re a seeker of sound. You venture out into the unknown, searching for fresher artists, deeper cuts, and tracks yet to be discovered.</p>
-                        <p class="tags" style="color: #333;">Exploration · Newness · Variety · Uniqueness</p>
+            <!-- Slide 5: All About You -->
+            <div class="carousel-item" id="allAboutYouSlide">
+                <div class="content">
+                    <h2>All About You</h2>
+                    <div class="profile-info">
+                        <img src="{{ image_url }}" alt="Profile Image" 
+                            class="profile-image"
+                            style="width: 100%; max-width: 150px; height: auto; border-radius: 50%; object-fit: cover;">
+                        <h2>{{ spotify_user_data.profile.display_name }}</h2>
+                        <p><strong>Followers:</strong> {{ followers }}</p>
+                        <p><strong>Country:</strong> {{ country }}</p>
+                        <p><strong>Spotify ID:</strong> {{ user_id }}</p>
                     </div>
                 </div>
             </div>
+
+            <!-- Top Genres Slide -->
+            <div class="carousel-item" id="topGenresSlide">
+                <div class="content">
+                    <h2>Your Top Genres</h2>
+                    <p class="intro">Here's a breakdown of your musical identity. Are you a true indie lover or just a pop fan?</p>
+                    
+                    <!-- Display Top Genres List -->
+                    <ul id="topGenresList" class="top-list">
+                        {% for genre in top_genres %}
+                            <li>{{ genre }}</li>
+                        {% empty %}
+                            <li>No genre data available</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Transition Slide -->
+            <div class="carousel-item" id="transitionMagicSlide">
+                <div class="swirl"></div> <!-- Swirling Circle -->
+                <div class="tunnel-background"></div> <!-- Tunnel Effect -->
+                <div class="content">
+                    <h2>Wait for it...</h2>
+                    <p>We saved the last for best, get ready for this next slide</p>
+                    <div class="transition-box">
+                        <span class="flip-text">🔄</span>
+                        <span class="flip-text">✨</span>
+                        <span class="flip-text">🎉</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Slide 6: "How Basic is Your Music Taste?" -->
+            <div class="carousel-item" id="musicTasteSlide">
+                <div class="content">
+                    <h2>How Basic is Your Music Taste?</h2>
+                    <p class="intro">Here's the average popularity of your top artists. Let's see how "basic" your taste is!</p>
+                    
+                    <!-- Display User's Top Artists -->
+                    <ul id="topArtistsList" class="top-list">
+                        <!-- Artists will be dynamically populated here -->
+                    </ul>
+
+                    <!-- Popularity Score -->
+                    <div class="popularity-score">
+                        <h3>Your Average Popularity: <span id="popularityScore">{{ top_track_popularity_score }}%</span></h3>
+                    </div>
+
+                    <!-- Message about how basic their taste is -->
+                    <div id="musicTasteMessage" class="music-message"> 
+                        <p><span id="musicTaste">{{ top_track_popularity_message }}</span>! </p>
+                    </div>
+                </div>
+            </div>
+
+
+            
+
+
         </div>
 
         <!-- Carousel Controls -->
