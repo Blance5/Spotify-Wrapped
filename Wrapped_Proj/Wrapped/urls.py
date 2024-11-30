@@ -20,6 +20,7 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('delete_wrap/<int:wrap_id>/', views.delete_wrap, name='delete_wrap'),
     path('rename_wrap/<int:wrap_id>/', views.rename_wrap, name='rename_wrap'),
+    path('delete-account/', views.delete_account, name='delete_account'),
 
 ]
 

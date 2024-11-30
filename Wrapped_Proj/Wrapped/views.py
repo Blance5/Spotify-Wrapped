@@ -18,7 +18,10 @@ import urllib.parse
 from django.utils import timezone
 from decouple import config
 from django.contrib.auth import login, get_user_model
+from .models import Wrap
 from .models import UserWrappedHistory  # Assuming you're saving the timeframes in a model
+from Wrapped.models import UserWrappedHistory
+
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
@@ -338,6 +341,10 @@ def delete_wrap(request, wrap_id):
     # Redirect back to the profile page
     return redirect('profile')
 
+def delete_wrap_by_id(wrap_id):
+    wrap = get_object_or_404(UserWrappedHistory, wrap_id=wrap_id)
+    wrap.delete()
+
 
 def rename_wrap(request, wrap_id):
     if request.method == "POST":
@@ -347,3 +354,25 @@ def rename_wrap(request, wrap_id):
         wrap.display_name = new_name  # Update the display name
         wrap.save()
     return redirect('profile')
+
+@login_required
+def delete_account(request):
+    if request.method == "POST":
+        user = request.user
+
+        # Get all wraps associated with the user's ID
+        wraps = UserWrappedHistory.objects.filter(user_id=user.id)  # Filter by user_id
+
+        if wraps.exists():
+            for wrap in wraps:
+                wrap.delete()  # Delete each wrap
+
+        # Now delete the user account
+        user.delete()
+
+        # Log the user out and redirect to the home page
+        logout(request)
+        return redirect('home')
+
+    # If it's a GET request, render the confirmation page
+    return render(request, 'profile/confirm_delete_account.html')
