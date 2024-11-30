@@ -242,7 +242,8 @@ def get_spotify_data(request, term):
             track_count = playlist.get("tracks", {}).get("total", 0)
             playlists_with_track_count.append({
                 "name": playlist.get("name", "Unknown"),
-                "track_count": track_count
+                "track_count": track_count,
+                "image_url": playlist["images"][0]["url"],
             })
 
         # Sort playlists by track count in descending order

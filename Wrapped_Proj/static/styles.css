@@ -1134,3 +1134,739 @@ h2 {
         transform: translateX(-100vw); /* Move particles across the screen */
     }
 }
+
+#introSlide {
+    position: relative;
+    background: linear-gradient(45deg, #6a11cb, #2575fc); /* Gradient background */
+    color: white;
+    text-align: center;
+    padding: 40px 20px; /* Adjust padding to match other slides */
+    height: 65vh; /* Match height of other slides */
+    max-height: 500px; /* Prevent slide from getting too tall */
+    width: 90vw; /* Match width of other slides */
+    max-width: 600px; /* Prevent slide from getting too wide */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 15px; /* Rounded corners for consistent styling */
+    animation: gradientAnimation 6s ease-in-out infinite;
+}
+
+#introSlide .content {
+    z-index: 2; /* Ensure text is above particles */
+    max-width: 80%;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInText 2s ease-out 1s forwards; /* Fade-in text animation */
+}
+
+#introSlide h2 {
+    font-size: 2.5rem; /* Reduced font size to fit with other slide text */
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    animation: slideUp 1s ease-out forwards;
+}
+
+#introSlide p {
+    font-size: 1.2rem; /* Reduced font size to fit with other slide text */
+    font-family: 'Arial', sans-serif;
+    font-weight: normal;
+    animation: fadeUp 2s ease-out 1s forwards; /* Fade-up paragraph animation */
+}
+
+#introSlide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://cdn.pixabay.com/photo/2016/03/26/13/09/particles-1284141_960_720.png') repeat;
+    opacity: 0.15;
+    pointer-events: none;
+    animation: moveParticles 4s linear infinite; /* Animated particle effect */
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background: linear-gradient(45deg, #6a11cb, #2575fc);
+    }
+    50% {
+        background: linear-gradient(45deg, #ff6a00, #ee0979); /* Change color midway */
+    }
+    100% {
+        background: linear-gradient(45deg, #6a11cb, #2575fc);
+    }
+}
+
+@keyframes fadeInText {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes moveParticles {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100vw); /* Move particles across the screen */
+    }
+}
+
+
+
+
+/* Styling for the Top Artist Slide */
+#topArtistsSlide {
+    position: relative;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.8)); /* Dark, ethereal background */
+    padding: 30px 20px; /* Reduced padding to avoid overflow */
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Glowing shadow */
+    text-align: center;
+    color: #fff;
+    min-height: 300px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transform: scale(1);
+    transition: transform 0.5s ease-out, box-shadow 0.5s ease-in-out;
+    animation: slideIn 2s ease-out forwards, glowAnimation 5s infinite alternate; /* Glowing effect */
+    max-width: 100%; /* Ensure the slide width does not exceed screen */
+    max-height: 500px; /* Maximum height to avoid overflow */
+    box-sizing: border-box;
+}
+
+/* Hover effect for the Top Artists Slide */
+#topArtistsSlide:hover {
+    transform: scale(1.05); /* Slight zoom-in */
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7); /* Glow effect */
+}
+
+/* Animations for sliding in */
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Glowing effect on background */
+@keyframes glowAnimation {
+    0% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Heading Styling for the Top Artists Slide */
+#topArtistsSlide h2 {
+    font-size: 2.5rem; /* Large and bold title */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+    color: #ffcb00;
+    text-shadow: 0 0 15px rgba(255, 203, 0, 0.5);
+    animation: fadeIn 2s ease-out 0.5s forwards;
+}
+
+/* Description text for Top Artists Slide */
+#topArtistsSlide p {
+    font-size: 1.1rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    margin-bottom: 20px;
+    opacity: 0.8;
+    color: #bbb;
+    animation: fadeInUp 2s ease-out 1s forwards;
+}
+
+/* List styling for the artist names */
+#topArtistList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0;
+    list-style-type: none;
+    margin: 0;
+    max-height: 300px; /* Restrict list height */
+    overflow-y: auto; /* Add vertical scroll if content exceeds height */
+    opacity: 0;
+    animation: fadeInList 2s ease-out 1.5s forwards; /* Animate the list into view */
+}
+
+/* Style the scrollbar itself */
+#topArtistList::-webkit-scrollbar {
+    width: 8px; /* Scrollbar width */
+    height: 8px; /* If the scrollbar is horizontal, set the height */
+}
+
+/* Style the scrollbar track (the background of the scrollbar) */
+#topArtistList::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.3); /* Slightly darker background */
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Style the scrollbar thumb (the part you drag) */
+#topArtistList::-webkit-scrollbar-thumb {
+    background-color: #ffcb00; /* Bright thumb color */
+    border-radius: 10px; /* Rounded corners */
+    border: 2px solid rgba(0, 0, 0, 0.2); /* Light border to give it some separation */
+}
+
+/* Hover effect for the scrollbar thumb */
+#topArtistList::-webkit-scrollbar-thumb:hover {
+    background-color: #f8b400; /* Slightly darker yellow when hovered */
+}
+
+/* Optional: style the corner (where both scrollbars meet, if there's both x and y scroll) */
+#topArtistList::-webkit-scrollbar-corner {
+    background-color: rgba(0, 0, 0, 0.3); /* Same as track */
+}
+
+/* Individual artist item styling */
+#topArtistList li {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    text-transform: capitalize;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease, letter-spacing 0.3s ease;
+    position: relative;
+    animation: listItemAnimation 1.5s ease-out forwards;
+}
+
+/* Hover effect on artist items */
+#topArtistList li:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateY(-7px);
+    letter-spacing: 5px; /* Expand text on hover */
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2); /* Subtle glowing effect */
+}
+
+/* Animation for list items */
+@keyframes listItemAnimation {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-in effect for content */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Fade-in-up effect for description and list */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-in effect for the artist list */
+@keyframes fadeInList {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Add an animated background of floating particles for a dynamic effect */
+#topArtistsSlide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://cdn.pixabay.com/photo/2016/03/26/13/09/particles-1284141_960_720.png') repeat;
+    opacity: 0.1;
+    pointer-events: none;
+    animation: moveParticles 10s linear infinite; /* Particle movement */
+}
+
+@keyframes moveParticles {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100vw); /* Move particles across the screen */
+    }
+}
+
+
+
+/* Styling for the Top Songs Slide */
+#topSongsSlide {
+    position: relative;
+    background: linear-gradient(45deg, rgba(255, 0, 0, 0.6), rgba(255, 0, 255, 0.6)); /* Bold gradient for vibrance */
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Glowing shadow */
+    text-align: center;
+    color: #fff;
+    min-height: 300px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transform: scale(1);
+    transition: transform 0.5s ease-out, box-shadow 0.5s ease-in-out;
+    animation: slideIn 2s ease-out forwards, glowAnimation 5s infinite alternate; /* Glowing effect */
+}
+
+/* Hover effect for the Top Songs Slide */
+#topSongsSlide:hover {
+    transform: scale(1.05); /* Slight zoom-in */
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7); /* Glow effect */
+}
+
+/* Animations for sliding in */
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Glowing effect on background */
+@keyframes glowAnimation {
+    0% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Heading Styling for the Top Songs Slide */
+#topSongsSlide h2 {
+    font-size: 2.5rem; /* Large and bold title */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    color: #ffcb00;
+    text-shadow: 0 0 15px rgba(255, 203, 0, 0.5);
+    animation: fadeIn 2s ease-out 0.5s forwards;
+}
+
+/* Description text for Top Songs Slide */
+#topSongsSlide p {
+    font-size: 1.1rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    margin-bottom: 20px;
+    opacity: 0.8;
+    color: #bbb;
+    animation: fadeInUp 2s ease-out 1s forwards;
+}
+
+/* List styling for the song names */
+#topSongList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0;
+    list-style-type: none;
+    margin: 0;
+    opacity: 0;
+    animation: fadeInList 2s ease-out 1.5s forwards; /* Animate the list into view */
+    max-height: 300px; /* Set a max height to allow scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrolling */
+    padding-right: 10px; /* Add some padding to avoid overlap with the scrollbar */
+}
+
+/* Custom Scrollbar Styling for the Top Songs List */
+#topSongsSlide #topSongList::-webkit-scrollbar {
+    width: 8px; /* Small, modern scrollbar */
+}
+
+#topSongsSlide #topSongList::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.6); /* Light thumb color */
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+#topSongsSlide #topSongList::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.9); /* Darker thumb color on hover */
+}
+
+/* Individual song item styling */
+#topSongList li {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    text-transform: capitalize;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease, letter-spacing 0.3s ease;
+    position: relative;
+    animation: listItemAnimation 1.5s ease-out forwards;
+}
+
+/* Hover effect on song items */
+#topSongList li:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateY(-7px);
+    letter-spacing: 5px; /* Expand text on hover */
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2); /* Subtle glowing effect */
+}
+
+/* Animation for list items */
+@keyframes listItemAnimation {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-in effect for content */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Fade-in-up effect for description and list */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-in effect for the song list */
+@keyframes fadeInList {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Add an animated background of floating particles for a dynamic effect */
+#topSongsSlide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://cdn.pixabay.com/photo/2016/03/26/13/09/particles-1284141_960_720.png') repeat;
+    opacity: 0.1;
+    pointer-events: none;
+    animation: moveParticles 10s linear infinite; /* Particle movement */
+}
+
+@keyframes moveParticles {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100vw); /* Move particles across the screen */
+    }
+}
+
+
+
+/* Styling for the Top Playlists Slide */
+#topPlaylistsSlide {
+    position: relative;
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.6), rgba(255, 0, 255, 0.6)); /* Vibrant gradient background */
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Glowing shadow */
+    text-align: center;
+    color: #fff;
+    min-height: 300px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transform: scale(1);
+    transition: transform 0.5s ease-out, box-shadow 0.5s ease-in-out;
+    animation: slideIn 2s ease-out forwards, glowAnimation 5s infinite alternate; /* Glowing effect */
+}
+
+/* Hover effect for the Top Playlists Slide */
+#topPlaylistsSlide:hover {
+    transform: scale(1.05); /* Slight zoom-in */
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7); /* Glow effect */
+}
+
+/* Animations for sliding in */
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Glowing effect on background */
+@keyframes glowAnimation {
+    0% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Heading Styling for the Top Playlists Slide */
+/* Heading Styling for the Top Playlists Slide */
+#topPlaylistsSlide h2 {
+    font-size: 2.2rem; /* Smaller title size */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px; /* Reduce letter spacing */
+    margin-bottom: 10px; /* Decrease margin to save space */
+    color: #ffcb00;
+    text-shadow: 0 0 15px rgba(255, 203, 0, 0.5); /* Glowing text effect */
+    animation: fadeIn 2s ease-out 0.5s forwards;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+#topPlaylistsSlide h2:hover {
+    color: #ffffff;
+    text-shadow: 0 0 25px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.6); /* Glowing effect on hover */
+}
+
+
+/* Description text for Top Playlists Slide */
+#topPlaylistsSlide p {
+    font-size: 1.3rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    margin-bottom: 20px;
+    opacity: 0.8;
+    color: #ddd;
+    animation: fadeInUp 2s ease-out 1s forwards;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7); /* Cool glowing effect for description */
+}
+
+/* List styling for the playlist names */
+#topPlaylistList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0;
+    list-style-type: none;
+    margin: 0;
+    opacity: 0;
+    animation: fadeInList 2s ease-out 1.5s forwards; /* Animate the list into view */
+    max-height: 300px; /* Set a max height to allow scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrolling */
+    padding-right: 10px; /* Add some padding to avoid overlap with the scrollbar */
+}
+
+/* Custom Scrollbar Styling for the Top Playlists List */
+#topPlaylistsSlide #topPlaylistList::-webkit-scrollbar {
+    width: 8px; /* Small, modern scrollbar */
+}
+
+#topPlaylistsSlide #topPlaylistList::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.6); /* Light thumb color */
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+#topPlaylistsSlide #topPlaylistList::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.9); /* Darker thumb color on hover */
+}
+
+/* Individual playlist item styling */
+#topPlaylistList li {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #fff;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    text-transform: capitalize;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease, letter-spacing 0.3s ease;
+    position: relative;
+    animation: listItemAnimation 1.5s ease-out forwards;
+    font-family: 'Orbitron', sans-serif; /* Futuristic font */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Playlist thumbnail styling */
+.playlist-thumbnail {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover; /* Ensure the image covers the area without distortion */
+    border: 2px solid #fff; /* Add a white border around the image */
+}
+
+/* Hover effect on playlist items */
+#topPlaylistList li:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateY(-7px);
+    letter-spacing: 5px; /* Expand text on hover */
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2); /* Subtle glowing effect */
+}
+
+/* Animation for list items */
+@keyframes listItemAnimation {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-in effect for content */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Fade-in-up effect for description and list */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-in effect for the playlist list */
+@keyframes fadeInList {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Add an animated background of floating particles for a dynamic effect */
+#topPlaylistsSlide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://cdn.pixabay.com/photo/2016/03/26/13/09/particles-1284141_960_720.png') repeat;
+    opacity: 0.1;
+    pointer-events: none;
+    animation: moveParticles 10s linear infinite; /* Particle movement */
+}
+
+@keyframes moveParticles {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100vw); /* Move particles across the screen */
+    }
+}
