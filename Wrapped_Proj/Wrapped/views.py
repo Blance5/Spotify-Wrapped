@@ -250,7 +250,7 @@ def profile_view(request):
 
     profile_data = spotify_user_data["profile"]
     spotify_user_id = profile_data.get("id", "Unknown")
-    past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')
+    past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')[:5]
     
     print("\n\n\n\n\n\n\n", spotify_user_id ,past_wraps, "\n\n\n\n\n")
 

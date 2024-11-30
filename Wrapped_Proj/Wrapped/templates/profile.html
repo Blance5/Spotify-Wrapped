@@ -3,42 +3,88 @@
 {% block title %}Profile - Wrapped{% endblock %}
 
 {% block content %}
-    <section>
-        <h2>{{ spotify_user_data.profile.display_name }}'s Profile</h2>
-        
-        <p><strong>Email:</strong>
-            {% if spotify_user_data.profile.email %}
-                {{ spotify_user_data.profile.email }}
-            {% else %}
-                No email available
-            {% endif %}
-        </p>
-    </section>
+<div class="container-fluid px-4 pb-5 pt-4" style="margin-bottom: 100px;">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h2 class="card-title display-6 mb-3">{{ spotify_user_data.profile.display_name }}'s Profile</h2>
+                            <p class="text-muted">
+                                <strong class="text-dark">Email:</strong>
+                                {% if spotify_user_data.profile.email %}
+                                    <span class="text-primary">{{ spotify_user_data.profile.email }}</span>
+                                {% else %}
+                                    <span class="text-secondary fst-italic">No email available</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <hr>
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mb-4 text-center text-md-start">Past Wraps</h3>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for wrap in past_wraps %}
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm hover-lift">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="card-title mb-0 text-dark">{{ wrap.timeframe|title }} Wrap</h4>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary">
+                                        {{ wrap.timeframe|upper }}
+                                    </span>
+                                </div>
+                                <p class="card-text text-muted small">
+                                    <strong class="text-dark">Generated:</strong> 
+                                    {{ wrap.generated_on|date:"F j, Y" }} at {{ wrap.generated_on|time:"H:i" }}
+                                </p>
+                                <div class="mt-auto">
+                                    <a href="{% url 'regenerate_past_wrap' wrap.wrap_id %}" class="btn btn-success w-100 d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-arrow-repeat me-2"></i>
+                                        Regenerate Wrapped
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="alert alert-info text-center" role="alert">
+                            <i class="bi bi-inbox me-2"></i>
+                            No past wraps available
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!-- Generate Wrapped Section -->
-    <section>
-        <h3>Generate Wrapped</h3>
-        <p>Discover your music trends and generate your personalized Wrapped!</p>
-    </section>
+<style>
+    /* Custom hover effect for cards */
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-lift:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+    }
 
-    <hr>
-
-    <!-- Past Wraps Section -->
-    <section>
-        <h3>Past Wraps</h3>
-        <p>View your previously generated Wrapped reports:</p>
-        <ul>
-            {% for wrap in past_wraps %}
-                <li>
-                    <p>Wrapped for: {{ wrap.timeframe|title }}</p>  <!-- Capitalize timeframe -->
-                    <p>Generated on: {{ wrap.generated_on|date:"F j, Y" }}</p>  <!-- Display the generation date -->
-                    <a href="{% url 'regenerate_past_wrap' wrap.wrap_id %}" class="btn">Regenerate Wrapped</a>
-                </li>
-            {% empty %}
-                <li>No past wraps available</li>
-            {% endfor %}
-        </ul>
-    </section>
+    /* Ensure content doesn't run into footer */
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    main {
+        flex: 1;
+        padding-bottom: 100px; /* Additional bottom padding */
+    }
+</style>
 {% endblock %}
