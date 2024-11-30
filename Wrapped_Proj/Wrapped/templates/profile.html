@@ -29,5 +29,16 @@
     <section>
         <h3>Past Wraps</h3>
         <p>View your previously generated Wrapped reports:</p>
+        <ul>
+            {% for wrap in past_wraps %}
+                <li>
+                    <p>Wrapped for: {{ wrap.timeframe|title }}</p>  <!-- Capitalize timeframe -->
+                    <p>Generated on: {{ wrap.generated_on|date:"F j, Y" }}</p>  <!-- Display the generation date -->
+                    <a href="{% url 'regenerate_past_wrap' wrap.wrap_id %}" class="btn">Regenerate Wrapped</a>
+                </li>
+            {% empty %}
+                <li>No past wraps available</li>
+            {% endfor %}
+        </ul>
     </section>
 {% endblock %}

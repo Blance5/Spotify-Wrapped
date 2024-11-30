@@ -16,8 +16,10 @@ from django.contrib.auth.backends import ModelBackend
 from django.http import JsonResponse
 from django.core.mail import send_mail
 import urllib.parse
+from django.utils import timezone
 from decouple import config
 from django.contrib.auth import login, get_user_model
+from .models import UserWrappedHistory  # Assuming you're saving the timeframes in a model
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
@@ -70,6 +72,7 @@ def spotify_callback(request):
         User = get_user_model()
         user, created = User.objects.get_or_create(username="spotify_user")
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        
         return redirect('home_logged_in')
     else:
         print("Failed to obtain access token:", token_info)  # Debugging line   
@@ -147,6 +150,70 @@ def wrapped_view(request):
     followers = profile_data.get("followers", 0)
     user_id = profile_data.get("id", "Unknown")
 
+    # Save the wrap occurrence to the database
+    if spotify_user_data.get('error') is None:
+        # If we were able to retrieve data, save the new wrap to the database
+        user_wrap = UserWrappedHistory(
+            user_id=user_id,
+            timeframe=term,  # Use the term that was selected by the user
+            generated_on=timezone.now()  # Store the current timestamp
+        )
+        user_wrap.save()
+
+
+    return render(request, 'wrapped.html', {
+        'spotify_user_data': spotify_user_data,
+        'top_artists': top_artists,
+        'recently_played': recently_played,
+        'top_tracks': top_tracks,
+        'playlists': playlists,
+        'saved_albums': saved_albums,
+        'top_track_popularity_score': top_track_popularity_score,
+        'top_track_popularity_message': top_track_popularity_message,
+        'top_genres': top_genres,
+        'country': country,
+        'image_url': image_url,
+        'followers': followers,
+        'user_id': user_id,
+    })
+
+# Regenerate Past Wrap
+def regenerate_past_wrap(request, wrap_id):
+    if not request.user.is_authenticated or 'spotify_token' not in request.session:
+        return redirect('spotify_login')
+
+    # Get the user's past wrapped history based on wrap_id (the ID for a specific timeframe)
+    wrap = UserWrappedHistory.objects.get(wrap_id=wrap_id)
+
+    access_token = request.session.get('spotify_token')
+    if not access_token:
+        return redirect('spotify_login')
+
+    # Regenerate wrapped data based on the saved timeframe
+    term = wrap.timeframe  # This is the saved timeframe from the model
+    try:
+        spotify_user_data = get_spotify_data(request, term)
+    except Exception as e:
+        spotify_user_data = {
+            'error': 'Unable to retrieve data from Spotify',
+            'details': str(e)
+        }
+        print("Error:", e)  # Debugging line
+
+    # Extract data for rendering
+    top_artists = spotify_user_data.get('top_artists', [])
+    recently_played = spotify_user_data.get('recently_played', [])
+    top_tracks = spotify_user_data.get('top_tracks', [])
+    playlists = spotify_user_data.get('playlists', [])
+    saved_albums = spotify_user_data.get('saved_albums', [])
+    top_track_popularity_score = spotify_user_data.get('top_track_popularity_score', 0)
+    top_track_popularity_message = spotify_user_data.get('top_track_popularity_message', 'Popularity score not available')
+    top_genres = spotify_user_data.get('top_genres', [])
+    profile_data = spotify_user_data["profile"]
+    country = profile_data.get("country", "Unknown")
+    image_url = profile_data.get("image_url", "/static/default_pfp.png")
+    followers = profile_data.get("followers", 0)
+    user_id = profile_data.get("id", "Unknown")
 
     return render(request, 'wrapped.html', {
         'spotify_user_data': spotify_user_data,
@@ -181,6 +248,12 @@ def profile_view(request):
         }
         print("Error:", e)  # Debugging line
 
+    profile_data = spotify_user_data["profile"]
+    spotify_user_id = profile_data.get("id", "Unknown")
+    past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')
+    
+    print("\n\n\n\n\n\n\n", spotify_user_id ,past_wraps, "\n\n\n\n\n")
+
     # Extract data or provide default empty lists
     top_artists = spotify_user_data.get('top_artists', [])
     recently_played = spotify_user_data.get('recently_played', [])
@@ -195,6 +268,7 @@ def profile_view(request):
         'top_tracks': top_tracks,
         'playlists': playlists,
         'saved_albums': saved_albums,
+        'past_wraps': past_wraps,  # Pass the past wraps to the template
     })
 
 # View for logged out users

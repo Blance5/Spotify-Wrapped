@@ -8,6 +8,7 @@ urlpatterns = [
     path('spotify/login/', views.spotify_login, name='spotify_login'),
     path('spotify/callback/', views.spotify_callback, name='spotify_callback'),
     path('wrapped/', views.wrapped_view, name='wrapped'),
+    path('wrapped/regenerate/<int:wrap_id>/', views.regenerate_past_wrap, name='regenerate_past_wrap'),  # Regenerate past wrap
     path('home_logged_in/', views.home_logged_in, name='home_logged_in'),  # Logged-in view
     path('home_logged_out/', views.home_logged_out, name='home_logged_out'),  # Logged-out view
     #path('accounts/', include('allauth.urls')),  # Include allauth URLs for authentication
