@@ -87,9 +87,6 @@ SOCIALACCOUNT_PROVIDERS = {
 WSGI_APPLICATION = 'Wrapped_Proj.wsgi.application'
 ASGI_APPLICATION = 'Wrapped_Proj.asgi.application'  # If applicable
 
-# Console Email Backend for development
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # Specify site ID
 SITE_ID = 1
 

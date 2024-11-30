@@ -282,27 +282,26 @@ def home_redirect(request):
         return redirect('home_logged_out')  # URL name for the logged-out view
 
 def contact(request):
-    success_message = None  # To hold success message
-    error_message = None  # To hold error message
+    success_message = None
+    error_message = None
 
     if request.method == 'POST':
-        # Get form data
         name = request.POST.get('name', '').strip()
         email = request.POST.get('email', '').strip()
         message = request.POST.get('message', '').strip()
 
-        # Validate form data
         if not name or not email or not message:
             error_message = 'All fields are required.'
         else:
             try:
-                # Process the message (e.g., send an email)
-                recipient_email = getattr(settings, 'EMAIL_HOST_USER', 'wrappeddevs@gmail.com')  # Fallback email
+                # Format message to include sender's email
+                formatted_message = f"From: {name} ({email})\n\nMessage:\n{message}"
+                
                 send_mail(
                     subject=f"Contact Form Submission from {name}",
-                    message=message,
-                    from_email=email,
-                    recipient_list=[recipient_email],
+                    message=formatted_message,
+                    from_email=settings.EMAIL_HOST_USER,  # Use system email as sender
+                    recipient_list=[settings.EMAIL_HOST_USER],  # Send to system email
                     fail_silently=False,
                 )
                 success_message = 'Thank you for contacting us! We will get back to you soon.'
@@ -310,7 +309,6 @@ def contact(request):
                 print(f"Error sending email: {e}")
                 error_message = 'An error occurred while sending your message. Please try again later.'
 
-    # Render the contact page with success or error messages
     return render(request, 'contact.html', {
         'success_message': success_message,
         'error_message': error_message,
