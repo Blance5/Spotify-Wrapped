@@ -7,7 +7,6 @@ cryptography==3.4.8
 dbus-python==1.2.18
 decouple==0.0.7
 distro==1.7.0
-distro-info==1.1+ubuntu0.1
 Django==5.1
 django-allauth==64.2.1
 django-debug-toolbar==4.4.6
