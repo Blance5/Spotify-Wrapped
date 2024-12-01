@@ -23,7 +23,7 @@ urlpatterns = [
     path('make_public/<int:wrap_id>/', views.make_public, name='make_public'),
     path('rename_wrap/<int:wrap_id>/', views.rename_wrap, name='rename_wrap'),
     path('delete_account/', views.delete_account, name='delete_account'),
-    path('game/', views.game_view, name='game'),
+    path('game/<int:wrap_id>/', views.game_view, name='game'),
     path('public_wrap/', views.public_wrap, name='public_wrap'),
 ]
 

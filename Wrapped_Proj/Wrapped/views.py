@@ -22,6 +22,7 @@ from .models import Wrap
 from .models import UserWrappedHistory  # Assuming you're saving the timeframes in a model
 from Wrapped.models import UserWrappedHistory
 from django.contrib import messages
+from django.urls import reverse
 
 
 from django.db.models import Q #delete later?
@@ -182,6 +183,7 @@ def wrapped_view(request):
         'image_url': image_url,
         'followers': followers,
         'user_id': user_id,
+        'wrap_id': user_wrap.wrap_id,
     })
 
 
@@ -237,6 +239,7 @@ def regenerate_past_wrap(request, wrap_id):
         'followers': followers,
         'user_id': user_id,
         'username': display_name,
+        'wrap_id': wrap_id,
     })
 
 def others_wrapped(request, wrap_id):
@@ -294,6 +297,7 @@ def others_wrapped(request, wrap_id):
         'followers': followers,
         'user_id': user_id,
         'username': display_name,
+        'wrap_id': wrap_id,
     })
 
 
@@ -468,22 +472,28 @@ def delete_account(request):
     return redirect('profile')
 
 @login_required
-def game_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')  # Redirect to login if not authenticated
+def game_view(request, wrap_id):
+    # Uncomment if needed
+    # if not request.user.is_authenticated:
+    #    return redirect('login')  # Redirect to login if not authenticated
 
-    # Fetch Spotify data
-    spotify_data = get_spotify_data(request, term="short_term")  # Adjust term as needed
-    top_tracks = spotify_data.get("top_tracks", [])
-
-    # Filter valid tracks with preview URLs and limit to 5
-    valid_tracks = [track for track in top_tracks if track["preview_url"]][:5]
+    wrap = get_object_or_404(UserWrappedHistory, wrap_id=wrap_id)
+    # get five tracks
+    valid_tracks = [track for track in wrap.top_tracks if track["preview_url"]][:5]
 
     # Check if we have enough tracks
     if len(valid_tracks) < 5:
-        return render(request, "error.html", {"message": "Not enough valid tracks to play the game."})
+        messages.warning(request, "Not enough tracks with previews to play the game.")
+        previous_page = request.META.get('HTTP_REFERER')
+        if previous_page:
+            return redirect(previous_page)
+        else:
+            return redirect(reverse('wrapped_detail', kwargs={'wrap_id': wrap_id}))
 
-    return render(request, "game.html", {"top_tracks": valid_tracks})
+    return render(request, "game.html", {
+        'top_tracks': valid_tracks,
+        'wrap_id': wrap_id,
+    })
 
 def public_wrap(request):
 
