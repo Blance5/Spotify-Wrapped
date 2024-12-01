@@ -26,6 +26,8 @@ class WrapCounter(models.Model):
 
 
 class UserWrappedHistory(models.Model):
+    creator_name = models.CharField(max_length=255, default='Unknown')
+
     top_artists = models.JSONField(default=list)
     top_tracks = models.JSONField(default=list)
     top_genres = models.JSONField(default=list)
@@ -45,6 +47,7 @@ class UserWrappedHistory(models.Model):
     saved_albums = models.JSONField(default=list, null=True, blank=True)
 
     user_id = models.CharField(max_length=255, unique=False)  # User identifier
+    public = models.BooleanField(default=False)
 
     SHORT_TERM = 'short_term'
     MEDIUM_TERM = 'medium_term'

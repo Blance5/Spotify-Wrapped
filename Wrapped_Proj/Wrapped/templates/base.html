@@ -164,6 +164,12 @@
                             Contact Us
                         </a>
                     </li>
+                    <li>
+                        <a href="{% url 'public_wrap' %}" 
+                           class="{% if request.resolver_match.url_name == 'public_wrap' %}active{% endif %}">
+                            Public Wraps
+                        </a>
+                    </li>
                     {% if user.is_authenticated %}
                         <li>
                             <a href="{% url 'profile' %}" 

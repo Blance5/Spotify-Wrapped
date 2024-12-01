@@ -4,11 +4,9 @@
 
 {% block content %}
 
-{% if spotify_user_data %}
     <div style="display: flex; justify-content: center; align-items: center; margin-top: 15px; text-align: center;">
         <div>
-            <h3>Welcome, {{ spotify_user_data.profile.display_name }}!</h3>
-            <p>Here is your Wrapped!</p>
+            <h3>Here is {{ username}}'s Wrapped!</h3>
         </div>
     </div>
 
@@ -101,15 +99,15 @@
             <!-- Introductory Slide: Welcome to Your Wrapped -->
             <div class="carousel-item active" id="introSlide">
                 <div class="content">
-                    <h2>Welcome to Your Wrapped!</h2>
-                    <p>Ready to discover your top artists, songs, genres, and more? Let's dive into your Wrapped!</p>
+                    <h2>Welcome to {{ username}}'s Wrapped!</h2>
+                    <p>Ready to discover {{ username}}'s top artists, songs, genres, and more? Let's dive into their Wrapped!</p>
                 </div>
             </div>
 
             <!-- Slide 1: Top Artists -->
             <div class="carousel-item" id="topArtistsSlide">
                 <div class="content">
-                    <h2>Your Top Artists</h2>
+                    <h2>{{username}}'s Top Artists</h2>
                     <ul class="top-list" id="topArtistLis">
                         {% for artist in top_artists %}
                             <li>
@@ -126,7 +124,7 @@
             <!-- Slide 2: Top Songs -->
             <div class="carousel-item" id="topSongsSlide">
                 <div class="content">
-                    <h2>Your Top Songs</h2>
+                    <h2>{{username}}'s Top Songs</h2>
                     <ul class="top-list" id="topSongList">
                         {% for track in top_tracks %}
                             <li>
@@ -142,7 +140,7 @@
             <!-- Transition Slide: Between Top Tracks and Top Playlists -->
             <div class="carousel-item" id="transitionBetweenTopSlides">
                 <div class="content">
-                    <h2 class="heading">Onto your top playlists!</h2>
+                    <h2 class="heading">Onto {{ username}}'s top playlists!</h2>
                     <div class="particles"></div>
                     <p class="description">I've seen more variety in a Spotify "Top 50" playlist...</p>
                 </div>
@@ -151,7 +149,7 @@
             <!-- Slide 3: Top Playlists -->
             <div class="carousel-item" id="topPlaylistsSlide">
                 <div class="content">
-                    <h2>Your Top Playlists</h2>
+                    <h2>{{username}}'s Top Playlists</h2>
                     <ul class="top-list" id="topPlaylistList" style="text-align: center;">
                         {% for playlist in playlists %}
                             <li style="display: flex; justify-content: center; align-items: center; gap: 15px;">
@@ -168,15 +166,14 @@
             <!-- Slide 5: All About You -->
             <div class="carousel-item" id="allAboutYouSlide">
                 <div class="content">
-                    <h2>All About You</h2>
+                    <h2>All About {{ username}}</h2>
                     <div class="profile-info">
                         <img src="{{ image_url }}" alt="Profile Image" 
                             class="profile-image"
                             style="width: 100%; max-width: 150px; height: auto; border-radius: 50%; object-fit: cover;">
-                        <h2>{{ spotify_user_data.profile.display_name}}</h2>
+                        <h2>{{ username}}</h2>
                         <p><strong>Followers:</strong> {{ followers }}</p>
                         <p><strong>Country:</strong> {{ country }}</p>
-                        <p><strong>Spotify ID:</strong> {{ user_id }}</p>
                     </div>
                 </div>
             </div>
@@ -184,8 +181,8 @@
             <!-- Top Genres Slide -->
             <div class="carousel-item" id="topGenresSlide">
                 <div class="content">
-                    <h2>Your Top Genres</h2>
-                    <p class="intro">Here's a breakdown of your musical identity. Are you a true indie lover or just a pop fan?</p>
+                    <h2>{{ username}}'s Top Genres</h2>
+                    <p class="intro">Here's a breakdown of {{ username}}'s musical identity. Are they a true indie lover or just a pop fan?</p>
                     
                     <!-- Display Top Genres List -->
                     <ul id="topGenresList" class="top-list">
@@ -217,8 +214,8 @@
             <!-- Slide 6: "How Basic is Your Music Taste?" -->
             <div class="carousel-item" id="musicTasteSlide">
                 <div class="content">
-                    <h2>How Basic is Your Music Taste?</h2>
-                    <p class="intro">Here's the average popularity of your top artists. Let's see how "basic" your taste is!</p>
+                    <h2>How Basic is {{ username}}'s Music Taste?</h2>
+                    <p class="intro">Here's the average popularity of {{ username}}'s top artists. Let's see how "basic" their taste is!</p>
                     
                     <!-- Display User's Top Artists -->
                     <ul id="topArtistsList" class="top-list">
@@ -227,7 +224,7 @@
 
                     <!-- Popularity Score -->
                     <div class="popularity-score">
-                        <h3>Your Average Popularity: <span id="popularityScore">{{ top_track_popularity_score }}%</span></h3>
+                        <h3>{{ username}}'s Average Popularity: <span id="popularityScore">{{ top_track_popularity_score }}%</span></h3>
                     </div>
 
                     <!-- Message about how basic their taste is -->
@@ -248,9 +245,5 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-    
-{% else %}
-    <p>No Spotify data available. <a href="{% url 'spotify_login' %}">Connect to Spotify</a></p>
-{% endif %}
 
 {% endblock %}

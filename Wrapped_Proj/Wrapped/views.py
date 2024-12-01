@@ -24,6 +24,9 @@ from Wrapped.models import UserWrappedHistory
 from django.contrib import messages
 
 
+from django.db.models import Q #delete later?
+
+
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
 SPOTIFY_CLIENT_ID = config('SPOTIFY_CLIENT_ID')
@@ -92,10 +95,7 @@ def home_logged_in(request):
     if not access_token:
         return redirect('spotify_login')
     try:
-        ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # Replace with actual term that user chooses
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        spotify_user_data = get_spotify_data(request, "long_term")
+        spotify_user_data = get_spotify_dataShorten(request)
     except Exception as e:
         spotify_user_data = {
             'error': 'Unable to retrieve data from Spotify',
@@ -103,20 +103,8 @@ def home_logged_in(request):
         }
         print("Error:", e)  # Debugging line
 
-    # Extract data or provide default empty lists
-    top_artists = spotify_user_data.get('top_artists', [])
-    recently_played = spotify_user_data.get('recently_played', [])
-    top_tracks = spotify_user_data.get('top_tracks', [])
-    playlists = spotify_user_data.get('playlists', [])
-    saved_albums = spotify_user_data.get('saved_albums', [])
-
     return render(request, 'home_logged_in.html', {
         'spotify_user_data': spotify_user_data,
-        'top_artists': top_artists,
-        'recently_played': recently_played,
-        'top_tracks': top_tracks,
-        'playlists': playlists,
-        'saved_albums': saved_albums,
     })
 
 
@@ -155,6 +143,8 @@ def wrapped_view(request):
     followers = profile_data.get("followers", 0)
     user_id = profile_data.get("id", "Unknown")
 
+    display_name = spotify_user_data["profile"]["display_name"]
+
     # Save the wrap occurrence to the database
     if spotify_user_data.get('error') is None:
         # If we were able to retrieve data, save the new wrap to the database
@@ -163,6 +153,7 @@ def wrapped_view(request):
             timeframe=term,  # Use the term that was selected by the user
             generated_on=timezone.now(),  # Store the current timestamp
 
+            creator_name=display_name,
             top_artists=top_artists,
             recently_played=recently_played,
             top_tracks=top_tracks,
@@ -206,8 +197,6 @@ def regenerate_past_wrap(request, wrap_id):
     if not access_token:
         return redirect('spotify_login')
 
-    # Regenerate wrapped data based on the saved timeframe
-    term = wrap.timeframe  # This is the saved timeframe from the model
     try:
         spotify_user_data = get_spotify_dataShorten(request)
     except Exception as e:
@@ -225,6 +214,7 @@ def regenerate_past_wrap(request, wrap_id):
     saved_albums = wrap.saved_albums
     top_track_popularity_score = wrap.top_track_popularity_score
     top_track_popularity_message = wrap.top_track_popularity_message
+    display_name = wrap.display_name
 
     top_genres = wrap.top_genres
     country = wrap.country
@@ -246,6 +236,64 @@ def regenerate_past_wrap(request, wrap_id):
         'image_url': image_url,
         'followers': followers,
         'user_id': user_id,
+        'username': display_name,
+    })
+
+def others_wrapped(request, wrap_id):
+    spotify_user_data = None
+    if request.user.is_authenticated and 'spotify_token' in request.session:
+        access_token = request.session.get('spotify_token')
+        if not access_token:
+            return redirect('spotify_login')
+
+        # Regenerate wrapped data based on the saved timeframe
+        try:
+            spotify_user_data = get_spotify_dataShorten(request)
+        except Exception as e:
+            spotify_user_data = {
+                'error': 'Unable to retrieve data from Spotify',
+                'details': str(e)
+            }
+            print("Error:", e)  # Debugging line
+
+    # Get the user's past wrapped history based on wrap_id (the ID for a specific timeframe)
+    wrap = UserWrappedHistory.objects.get(wrap_id=wrap_id)
+    # Extract data for rendering
+    top_artists = wrap.top_artists
+    recently_played = wrap.recently_played
+    top_tracks = wrap.top_tracks
+    playlists = wrap.playlists
+    saved_albums = wrap.saved_albums
+    top_track_popularity_score = wrap.top_track_popularity_score
+    top_track_popularity_message = wrap.top_track_popularity_message
+    display_name = wrap.creator_name
+
+    top_track_popularity_message = top_track_popularity_message.replace('Your', f"{display_name}'s")
+    top_track_popularity_message = top_track_popularity_message.replace('You', 'They')
+    top_track_popularity_message = top_track_popularity_message.replace('You\'re ', 'They\'re')
+    top_track_popularity_message = top_track_popularity_message.replace('you\'re ', 'they\'re')
+
+    top_genres = wrap.top_genres
+    country = wrap.country
+    image_url = wrap.image_url
+    followers = wrap.followers
+    user_id = wrap.user_id
+
+    return render(request, 'others_wrapped.html', {
+        'spotify_user_data': spotify_user_data,
+        'top_artists': top_artists,
+        'recently_played': recently_played,
+        'top_tracks': top_tracks,
+        'playlists': playlists,
+        'saved_albums': saved_albums,
+        'top_track_popularity_score': top_track_popularity_score,
+        'top_track_popularity_message': top_track_popularity_message,
+        'top_genres': top_genres,
+        'country': country,
+        'image_url': image_url,
+        'followers': followers,
+        'user_id': user_id,
+        'username': display_name,
     })
 
 
@@ -268,7 +316,7 @@ def profile_view(request):
         spotify_user_id = profile_data.get("id", "Unknown")
 
         # Fetch past wraps, ensuring they match the current Spotify user ID
-        past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')[:5]
+        past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')[:12]
 
     except Exception as e:
         # Comprehensive error handling
@@ -354,6 +402,16 @@ def delete_wrap(request, wrap_id):
     # Redirect back to the profile page
     return redirect('profile')
 
+def make_public(request, wrap_id):
+    if request.method == "POST":
+        # Find and toggle the wrap by wrap_id
+        wrap = get_object_or_404(UserWrappedHistory, wrap_id=wrap_id)
+        wrap.public = not wrap.public
+        wrap.save()
+
+    # Redirect back to the profile page
+    return redirect('profile')
+
 def rename_wrap(request, wrap_id):
     if request.method == "POST":
         new_name = request.POST.get("new_name")
@@ -408,3 +466,19 @@ def delete_account(request):
     
     # If not a POST request, redirect back to profile
     return redirect('profile')
+
+
+def public_wrap(request):
+
+    public_wraps = UserWrappedHistory.objects.filter(public=True).order_by('-generated_on')
+
+    search_query = request.GET.get('search', '').strip()
+    if search_query:
+        public_wraps = public_wraps.filter(
+            Q(creator_name__icontains=search_query) |
+            Q(display_name__icontains=search_query)
+        )
+
+    return render(request, 'public_wrap.html', {
+        'public_wraps': public_wraps,
+    })
