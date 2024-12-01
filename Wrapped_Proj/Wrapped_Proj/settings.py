@@ -39,7 +39,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*', 'wrapped2340-b65007b008d9.herokuapp.com']
 
