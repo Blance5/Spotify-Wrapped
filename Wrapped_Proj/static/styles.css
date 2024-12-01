@@ -267,24 +267,23 @@ footer {
     align-items: center; /* Vertically center content inside the p tag */
   }
   
-/* Center and size carousel items */
+/* Style for individual carousel items */
 .carousel-item {
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    height: 65vh; /* Restrict to 65 of the viewport height */
+    height: 65vh; /* Restrict to 65% of the viewport height */
     max-height: 500px; /* Maximum height limit */
-    width: 90vw;
-    max-width: 600px; /* Limit the width */
+    width: 100%; /* Full width to ensure responsiveness */
     text-align: center;
     padding: 20px;
     margin: auto;
     box-sizing: border-box;
     overflow-y: auto; /* Allow scrolling for overflow */
     border-radius: 15px;
+    transition: height 0.3s ease-in-out; /* Smooth transition for height */
 }
-
 
 
 
@@ -460,10 +459,16 @@ body.dark-mode .nav-links ul li a:hover {
     overflow: hidden;
     height: 65vh; /* Match height of other slides */
     max-height: 500px; /* Max height of other slides */
-    width: 90vw; /* Match width of other slides */
-    max-width: 600px; /* Max width of other slides */
-    margin: auto; /* Center the slide */
+    min-height: 300px;
+    
+    flex-direction: column;
+    transition: transform 0.3s ease-in-out;
+    max-width: 100%; /* Make sure it doesn't overflow the container */
 }
+
+
+
+
 
 #musicTasteSlide .content {
     text-align: center;
@@ -705,19 +710,7 @@ h2 {
     margin-right: 0.5rem;
 }
 
-/* Responsive personality card */
-.personality-card {
-    background-color: #f3f4f6; /* Light grey background */
-    color: #000; /* Black text color */
-    padding: 1.5rem;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 500px; /* Max width */
-    margin: auto;
-    box-sizing: border-box;
-    overflow-y: auto;
-    text-align: center;
-}
+
 
 .personality-card h3 {
     font-size: 1.5rem;
@@ -736,35 +729,49 @@ h2 {
 
 /* Centering the carousel itself */
 #spotifyCarousel {
-    max-width: 600px; /* Centered carousel with max-width */
+    max-width: 100%; /* Full width for responsiveness */
+    width: 90%; /* Ensure it fits within the viewport */
     margin: 20px auto;
     border-radius: 15px;
     overflow: hidden;
+    box-sizing: border-box; /* Ensures padding doesn't exceed bounds */
 }
 
+/* Responsive carousel items */
 .carousel-item .content {
-    padding: 20px;
+    padding: 15px; /* Adjust padding for consistency */
 }
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
     .carousel-item {
-        height: auto;
-        width: 80vw; /* Make it more compact on smaller screens */
+        height: auto; /* Let items adjust height for smaller screens */
+        width: 90vw; /* Slightly more compact */
     }
+
     h2 {
-        font-size: 1.3rem;
+        font-size: 1.5rem; /* Smaller heading on mobile */
+    }
+
+    p {
+        font-size: 1rem; /* Adjust text size */
     }
 
     .top-list li {
-        font-size: 1rem;
+        font-size: 1rem; /* Reduce font size for smaller screens */
     }
 
-    .personality-card {
-        padding: 1rem;
+    .artist-name {
+        font-size: 1rem; /* Adjust artist name font size */
     }
-    .description-box {
-        max-width: 80%; /* Wider box for smaller screens */
+
+    .artist-img {
+        width: 50px; /* Smaller image sizes on mobile */
+        height: 50px;
+    }
+
+    .carousel-item .content {
+        padding: 10px; /* Reduce padding on smaller screens */
     }
 }
 
@@ -950,7 +957,6 @@ h2 {
     height: 65vh; /* Match height of other slides */
     max-height: 500px;
     width: 90vw; /* Match width of other slides */
-    max-width: 600px;
     position: relative;
     overflow: hidden;
     text-align: center;
@@ -1068,7 +1074,6 @@ h2 {
 }
 
 
-/* Styling for the Top Genres Slide */
 #topGenresSlide {
     position: relative;
     background: linear-gradient(145deg, #6a11cb, #2575fc); /* Cool gradient background */
@@ -1081,14 +1086,46 @@ h2 {
     min-height: 300px;
     justify-content: center;
     align-items: center;
-    flex-direction: column; /* Ensure vertical stacking of content */
+    flex-direction: column;
     transition: transform 0.3s ease-in-out;
     max-width: 100%; /* Make sure it doesn't overflow the container */
 }
 
-/* Adding a slight scale effect on hover */
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 768px) {
+    #topGenresSlide {
+        padding: 20px; /* Reduce padding on smaller screens */
+        min-height: 250px; /* Slightly reduce minimum height */
+    }
+
+    #topGenresSlide .content {
+        max-width: 100%;
+        width: 100%;
+        max-height: 300px; /* Set a max height for scrolling */
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    #topGenresSlide h2 {
+        font-size: 1.5rem; /* Smaller font size on mobile */
+    }
+
+    #topGenresSlide .intro {
+        font-size: 0.9rem; /* Smaller intro text */
+    }
+}
+
 #topGenresSlide:hover {
     transform: scale(1.05);
+}
+
+#topGenresSlide .content {
+    max-width: 800px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .carousel-item#allAboutYouSlide {
@@ -1103,46 +1140,35 @@ h2 {
     overflow: hidden;
 }
 
-/* Styling the content inside the slide */
-#topGenresSlide .content {
-    max-width: 800px;
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
 
-/* The header of the genres slide */
 #topGenresSlide h2 {
     font-family: 'Poppins', sans-serif;
-    font-size: 2rem;  /* Reduced font size */
+    font-size: 2rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin-bottom: 15px;  /* Reduced margin */
+    margin-bottom: 15px;
     animation: fadeIn 1s ease-out;
 }
 
-/* The description text for the intro */
 #topGenresSlide .intro {
-    font-size: 1rem;  /* Reduced font size */
+    font-size: 1rem;
     font-weight: 300;
     opacity: 0.8;
-    margin-bottom: 20px;  /* Reduced margin */
+    margin-bottom: 20px;
     animation: fadeIn 1.5s ease-out;
 }
 
-/* List styling for the genres */
 #topGenresList {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12px;  /* Reduced gap */
+    gap: 12px;
     padding: 0;
     list-style-type: none;
     margin: 0;
+    max-height: 200px; /* Add max height for scrolling */
+    overflow-y: auto; /* Enable scrolling */
 }
 
 /* Individual genre item styling */
@@ -1165,6 +1191,8 @@ h2 {
     transform: translateY(-5px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
+
+
 
 /* Animation for list items */
 #topGenresList li:nth-child(even) {
@@ -1207,6 +1235,26 @@ h2 {
     }
 }
 
+/* Custom scrollbar */
+#topGenresList::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+#topGenresList::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.2); /* Background of the track */
+    border-radius: 10px;
+}
+
+#topGenresList::-webkit-scrollbar-thumb {
+    background: #2575fc; /* Color of the scrollbar thumb */
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.1); /* Optional: adds a border around the thumb */
+}
+
+#topGenresList::-webkit-scrollbar-thumb:hover {
+    background: #6a11cb; /* Hover effect for the thumb */
+}
+
 /* Add some sparkle effect for the intro (optional) */
 #topGenresSlide .intro {
     position: relative;
@@ -1236,20 +1284,20 @@ h2 {
 }
 
 
+/* Intro Slide styling */
 #introSlide {
     position: relative;
     background: linear-gradient(45deg, #6a11cb, #2575fc); /* Gradient background */
     color: white;
     text-align: center;
-    padding: 40px 20px; /* Adjust padding to match other slides */
-    height: 65vh; /* Match height of other slides */
-    max-height: 500px; /* Prevent slide from getting too tall */
-    width: 90vw; /* Match width of other slides */
-    max-width: 600px; /* Prevent slide from getting too wide */
+    padding: 40px 20px; /* Adjust padding for balance */
+    height: 65vh;
+    max-height: 500px;
+    width: 100%; /* Full width */
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    border-radius: 15px; /* Rounded corners for consistent styling */
+    border-radius: 15px;
     animation: gradientAnimation 6s ease-in-out infinite;
 }
 
@@ -1352,7 +1400,6 @@ h2 {
     height: 65vh; /* Match height of other slides */
     max-height: 500px; /* Prevent slide from getting too tall */
     width: 90vw; /* Match width of other slides */
-    max-width: 600px; /* Prevent slide from getting too wide */
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -1450,7 +1497,19 @@ h2 {
     }
 }
 
+/* Styling for images and text */
+.artist-img {
+    max-width: 100%; /* Ensure image is responsive */
+    height: auto;
+    border-radius: 50%; /* Round images for consistent look */
+    margin-bottom: 10px;
+}
 
+.artist-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: block;
+}
 
 
 /* Styling for the Top Artist Slide */
