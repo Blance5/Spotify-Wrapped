@@ -5,6 +5,7 @@ body {
     padding: 0;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 /* Define theme variables */
@@ -26,6 +27,7 @@ body {
 .card p {
     color: var(--text-light);
 }
+
 
 body.dark-mode .card-title,
 body.dark-mode .card-text,
@@ -203,16 +205,47 @@ nav ul li a {
 footer {
     background-color: #333;
     color: white;
-    padding: 0.5rem; /* Reduced padding */
     font-size: 0.875rem; /* Smaller font size */
     text-align: center;
-    margin-top: 200px;
     position: relative;
-    bottom: 0;
     width: 100%;
+    padding: 10px 0; /* Adjust padding to make footer thinner */
     line-height: 1.5; /* Adjust line height for readability */
-}
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Center text vertically */
+    height: 50px; /* Set a fixed height for a thinner footer */
+    box-sizing: border-box; /* Ensure padding is included in height calculation */
+  }
+  
+  .gamebut {
+    cursor: pointer;
+    text-decoration: none;
+    padding: 10px 20px; /* Smaller padding */
+    font-size: 16px; /* Smaller font size */
+    background-color: #007bff;
+    border-radius: 12px;
+    color: white;
+    transition: all 0.3s ease;
+    text-align: center; /* Ensure text is centered */
+    margin: 0 auto; /* Center it horizontally */
+    display: block; /* Make the <p> behave like a block element */
+    width: fit-content; /* Adjust width to content */
+  }
+  
+  /* Hover effect */
+  .gamebut:hover {
+    background-color: #0056b3; /* Slightly darker background on hover */
+    transform: scale(1.05); /* Slightly increase size on hover */
+  }
+  
 
+  footer p {
+    margin: 0; /* Remove any default margin on p tag */
+    display: flex;
+    align-items: center; /* Vertically center content inside the p tag */
+  }
+  
 /* Center and size carousel items */
 .carousel-item {
     display: flex;

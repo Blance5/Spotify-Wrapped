@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no"">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Django App{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
@@ -127,15 +127,29 @@
         }
 
         footer {
-            background-color: #343a40;
-            color: #ffffff;
-            text-align: center;
-            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #f8f9fa; /* Light mode background color */
+            color: #333; /* Light mode font color */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode footer {
+            background-color: #333; /* Dark mode background color */
+            color: #fff; /* Dark mode font color */
         }
 
         .dark-mode-toggle {
             cursor: pointer;
             font-size: 1.5rem;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .dark-mode-toggle:hover {
+        transform: rotate(360deg);
         }
     </style>
 </head>
