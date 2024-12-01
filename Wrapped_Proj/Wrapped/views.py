@@ -410,28 +410,19 @@ def delete_account(request):
     return redirect('profile')
 
 @login_required
-def game(request):
-    if not request.user.is_authenticated or 'spotify_token' not in request.session:
-        return redirect('spotify_login')
+def game_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')  # Redirect to login if not authenticated
 
-    access_token = request.session.get('spotify_token')
-    if not access_token:
-        return redirect('spotify_login')
+    # Fetch Spotify data
+    spotify_data = get_spotify_data(request, term="short_term")  # Adjust term as needed
+    top_tracks = spotify_data.get("top_tracks", [])
 
-    try:
-        # Retrieve Spotify user data
-        spotify_user_data = get_spotify_dataShorten(request)
-        
-        # Extract profile data
-        profile_data = spotify_user_data.get("profile", {})
-        spotify_user_id = profile_data.get("id", "Unknown")
+    # Filter valid tracks with preview URLs and limit to 5
+    valid_tracks = [track for track in top_tracks if track["preview_url"]][:5]
 
-    except Exception as e:
-        # Comprehensive error handling
-        print(f"Error retrieving Spotify data: {e}")
-        messages.error(request, 'Unable to retrieve Spotify data. Please try again later.')
-        spotify_user_data = {
-            'error': 'Unable to retrieve data from Spotify',
-            'details': str(e)
-        }
-    return render(request, 'game.html')
+    # Check if we have enough tracks
+    if len(valid_tracks) < 5:
+        return render(request, "error.html", {"message": "Not enough valid tracks to play the game."})
+
+    return render(request, "game.html", {"top_tracks": valid_tracks})
