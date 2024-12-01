@@ -34,7 +34,7 @@ SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
 SPOTIFY_CLIENT_ID = config('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = config('SPOTIFY_CLIENT_SECRET')
-SPOTIFY_REDIRECT_URI = "http://127.0.0.1:8000/spotify/callback/"
+SPOTIFY_REDIRECT_URI = "https://wrapped2340-b65007b008d9.herokuapp.com/spotify/callback/"
 SPOTIFY_USER_PROFILE_URL = "https://api.spotify.com/v1/me"
 SCOPES = "user-top-read playlist-read-private user-library-read user-read-email user-read-private"
 
