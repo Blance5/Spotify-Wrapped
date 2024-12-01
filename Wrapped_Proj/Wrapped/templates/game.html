@@ -9,74 +9,28 @@
         <div class="col-12 col-md-8 col-lg-6">
             <div class="card shadow-lg">
                 <div class="card-header bg-primary text-white">
-                    <h2>Guessing Game</h2>
+                    <h2 class="mb-0">🎵 Guess the Song</h2>
                 </div>
-                
-                <div class="card-body">
-                    <!-- Game Status -->
-                    <div id="game-status" class="mb-4">
-                        <h3>Score: <span id="score">0</span></h3>
-                        <h4>Time Remaining: <span id="timer">30</span> seconds</h4>
-                    </div>
 
-                    <!-- Audio Player (Hidden) -->
-                    <audio id="globalAudio" preload="auto" style="width: 100%; max-width: 400px; height: 40px;">
-                        <!-- Initially no track loaded -->
+                <div class="card-body">
+                    <h3 id="score" class="mb-4">Score: 0</h3>
+
+                    <audio id="globalAudio" preload="auto" class="mb-3" style="width: 100%; max-width: 400px;">
                         Your browser does not support the audio element.
                     </audio>
 
-                    <!-- Song Guess Section -->
-                    <div id="game-area">
-                        <h4 class="mb-3">Guess the Song!</h4>
-                        
-                        <div class="d-flex flex-column align-items-center">
-                            <button id="play-snippet" class="btn btn-success mb-3">
-                                <i class="bi bi-play-fill"></i> Play Snippet
-                            </button>
+                    <button id="play-snippet" class="btn btn-success btn-lg mb-3">Play Snippet</button>
 
-                            <form id="guess-form" class="w-100">
-                                <div class="input-group mb-3">
-                                    <input 
-                                        type="text" 
-                                        id="song-guess" 
-                                        class="form-control" 
-                                        placeholder="Enter song title"
-                                        autocomplete="off"
-                                    >
-                                    <button type="submit" class="btn btn-primary">
-                                        Submit Guess
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                    <div id="choices" class="mt-4">
+                        <!-- Choices will be dynamically populated -->
                     </div>
 
-                    <!-- Result Display -->
-                    <div id="result-area" class="mt-4" style="display:none;">
-                        <div id="correct-result" class="alert alert-success">
-                            Correct! 🎉 The song was: <span id="correct-song"></span>
-                        </div>
-                        <div id="incorrect-result" class="alert alert-danger">
-                            Incorrect! 😢 The correct song was: <span id="incorrect-song"></span>
-                        </div>
-                    </div>
+                    <div id="result" class="mt-3"></div>
 
-                    <!-- Game Over Section -->
-                    <div id="game-over" style="display:none;">
-                        <h3>Game Over!</h3>
-                        <p>Your Final Score: <span id="final-score"></span></p>
-                        <button id="restart-game" class="btn btn-primary">
-                            Play Again
-                        </button>
-                    </div>
-                </div>
+                    <button id="restart-game" class="btn btn-secondary mt-4" style="display: none;">Play Again</button>
 
-                <!-- Game Instructions -->
-                <div class="card-footer text-muted">
-                    <p>
-                        🎵 Listen to the song snippet and guess the title! 
-                        You have 30 seconds to guess each song.
-                    </p>
+                    <!-- Back to Wrapped Button -->
+                    <a href="{% url 'wrapped' %}" class="btn btn-outline-primary mt-4">Back to Wrapped</a>
                 </div>
             </div>
         </div>
@@ -84,45 +38,114 @@
 </div>
 
 <script>
-    // Game Logic Placeholder
-    document.addEventListener('DOMContentLoaded', function() {
-        const playSnippetBtn = document.getElementById('play-snippet');
-        const songSnippet = document.getElementById('song-snippet');
-        const guessForm = document.getElementById('guess-form');
-        const songGuessInput = document.getElementById('song-guess');
-        const scoreDisplay = document.getElementById('score');
-        const timerDisplay = document.getElementById('timer');
-        const resultArea = document.getElementById('result-area');
-        const correctResult = document.getElementById('correct-result');
-        const incorrectResult = document.getElementById('incorrect-result');
-        const gameOverSection = document.getElementById('game-over');
-        const finalScoreDisplay = document.getElementById('final-score');
-        const restartGameBtn = document.getElementById('restart-game');
+    document.addEventListener('DOMContentLoaded', function () {
+        const tracks = [
+            {% for track in top_tracks %}
+                {
+                    name: "{{ track.name|escapejs }}",
+                    artist: "{{ track.artist|escapejs }}",
+                    preview_url: "{{ track.preview_url|escapejs }}"
+                },
+            {% endfor %}
+        ];
 
-        // Placeholder for actual game initialization
-        function initializeGame() {
-            // TODO: Implement game start logic
-            console.log('Game initialized');
+        const audio = document.getElementById('globalAudio');
+        const playSnippetBtn = document.getElementById('play-snippet');
+        const choicesDiv = document.getElementById('choices');
+        const resultDiv = document.getElementById('result');
+        const restartBtn = document.getElementById('restart-game');
+        const scoreDisplay = document.getElementById('score');
+
+        let currentTrackIndex = 0;
+        let score = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
         }
 
-        // Placeholder for playing song snippet
-        playSnippetBtn.addEventListener('click', function() {
-            // TODO: Fetch and play actual song snippet from Spotify
-            console.log('Playing song snippet');
+        function playTrack() {
+            if (currentTrackIndex >= tracks.length) {
+                endGame();
+                return;
+            }
+
+            const track = tracks[currentTrackIndex];
+            if (track.preview_url) {
+                audio.src = track.preview_url;
+                audio.play().catch(() => alert('Error playing the track.'));
+                generateChoices(track.name);
+            } else {
+                nextTrack();
+            }
+        }
+
+        function generateChoices(correctAnswer) {
+            // Shuffle tracks and pick 3 random incorrect answers
+            const incorrectChoices = tracks
+                .filter(track => track.name !== correctAnswer)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 3);
+
+            // Combine the correct answer with the incorrect choices
+            const choices = [...incorrectChoices.map(track => track.name), correctAnswer];
+            shuffleArray(choices);
+
+            // Populate the choices in the UI
+            choicesDiv.innerHTML = '';
+            choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.classList.add('btn', 'btn-outline-primary', 'btn-lg', 'm-2');
+                button.textContent = choice;
+                button.onclick = () => checkAnswer(choice, correctAnswer);
+                choicesDiv.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            if (selected === correct) {
+                score++;
+                resultDiv.innerHTML = `<div class="alert alert-success">Correct! 🎉</div>`;
+            } else {
+                resultDiv.innerHTML = `<div class="alert alert-danger">Incorrect! 😢 The correct song was: ${correct}</div>`;
+            }
+
+            scoreDisplay.textContent = `Score: ${score}`;
+            nextTrack();
+        }
+
+        function nextTrack() {
+            currentTrackIndex++;
+            setTimeout(() => {
+                resultDiv.innerHTML = '';
+                playTrack();
+            }, 2000);
+        }
+
+        function endGame() {
+            audio.pause();
+            playSnippetBtn.style.display = 'none';
+            choicesDiv.style.display = 'none';
+            restartBtn.style.display = 'block';
+            resultDiv.innerHTML = `<h4>Game Over! Your Score: ${score}</h4>`;
+        }
+
+        restartBtn.addEventListener('click', function () {
+            currentTrackIndex = 0;
+            score = 0;
+            scoreDisplay.textContent = 'Score: 0';
+            playSnippetBtn.style.display = 'block';
+            choicesDiv.style.display = 'block';
+            restartBtn.style.display = 'none';
+            resultDiv.innerHTML = '';
+            playTrack();
         });
 
-        // Guess submission handler
-        guessForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            // TODO: Validate guess against correct song
-            console.log('Guess submitted:', songGuessInput.value);
-        });
+        playSnippetBtn.addEventListener('click', playTrack);
 
-        // Restart game functionality
-        restartGameBtn.addEventListener('click', initializeGame);
-
-        // Initialize game on page load
-        initializeGame();
+        playTrack();
     });
 </script>
 {% endblock %}
