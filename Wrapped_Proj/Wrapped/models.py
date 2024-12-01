@@ -26,6 +26,24 @@ class WrapCounter(models.Model):
 
 
 class UserWrappedHistory(models.Model):
+    top_artists = models.JSONField(default=list)
+    top_tracks = models.JSONField(default=list)
+    top_genres = models.JSONField(default=list)
+    playlists = models.JSONField(default=list)
+
+    # Other fields
+    country = models.CharField(max_length=100, default='Unknown')
+    image_url = models.URLField(max_length=500, null=True, blank=True)
+    followers = models.IntegerField(default=0)
+
+    # Popularity metrics
+    top_track_popularity_score = models.FloatField(default=0)
+    top_track_popularity_message = models.TextField(null=True, blank=True)
+
+    # Optional fields
+    recently_played = models.JSONField(default=list, null=True, blank=True)
+    saved_albums = models.JSONField(default=list, null=True, blank=True)
+
     user_id = models.CharField(max_length=255, unique=False)  # User identifier
 
     SHORT_TERM = 'short_term'
