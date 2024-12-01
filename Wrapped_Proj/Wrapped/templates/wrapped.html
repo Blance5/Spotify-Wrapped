@@ -253,6 +253,10 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
+
+    <a href="{% url 'game' %}" class="gamebut">
+        Up for a Challenge?
+    </a>
     
 {% else %}
     <p>No Spotify data available. <a href="{% url 'spotify_login' %}">Connect to Spotify</a></p>

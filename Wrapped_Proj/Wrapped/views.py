@@ -408,3 +408,30 @@ def delete_account(request):
     
     # If not a POST request, redirect back to profile
     return redirect('profile')
+
+@login_required
+def game(request):
+    if not request.user.is_authenticated or 'spotify_token' not in request.session:
+        return redirect('spotify_login')
+
+    access_token = request.session.get('spotify_token')
+    if not access_token:
+        return redirect('spotify_login')
+
+    try:
+        # Retrieve Spotify user data
+        spotify_user_data = get_spotify_dataShorten(request)
+        
+        # Extract profile data
+        profile_data = spotify_user_data.get("profile", {})
+        spotify_user_id = profile_data.get("id", "Unknown")
+
+    except Exception as e:
+        # Comprehensive error handling
+        print(f"Error retrieving Spotify data: {e}")
+        messages.error(request, 'Unable to retrieve Spotify data. Please try again later.')
+        spotify_user_data = {
+            'error': 'Unable to retrieve data from Spotify',
+            'details': str(e)
+        }
+    return render(request, 'game.html')

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Spotify Song Guess Game{% endblock %}
+
+{% block content %}
+<div class="container text-center my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h2>Guessing Game</h2>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Game Status -->
+                    <div id="game-status" class="mb-4">
+                        <h3>Score: <span id="score">0</span></h3>
+                        <h4>Time Remaining: <span id="timer">30</span> seconds</h4>
+                    </div>
+
+                    <!-- Audio Player (Hidden) -->
+                    <audio id="globalAudio" preload="auto" style="width: 100%; max-width: 400px; height: 40px;">
+                        <!-- Initially no track loaded -->
+                        Your browser does not support the audio element.
+                    </audio>
+
+                    <!-- Song Guess Section -->
+                    <div id="game-area">
+                        <h4 class="mb-3">Guess the Song!</h4>
+                        
+                        <div class="d-flex flex-column align-items-center">
+                            <button id="play-snippet" class="btn btn-success mb-3">
+                                <i class="bi bi-play-fill"></i> Play Snippet
+                            </button>
+
+                            <form id="guess-form" class="w-100">
+                                <div class="input-group mb-3">
+                                    <input 
+                                        type="text" 
+                                        id="song-guess" 
+                                        class="form-control" 
+                                        placeholder="Enter song title"
+                                        autocomplete="off"
+                                    >
+                                    <button type="submit" class="btn btn-primary">
+                                        Submit Guess
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Result Display -->
+                    <div id="result-area" class="mt-4" style="display:none;">
+                        <div id="correct-result" class="alert alert-success">
+                            Correct! 🎉 The song was: <span id="correct-song"></span>
+                        </div>
+                        <div id="incorrect-result" class="alert alert-danger">
+                            Incorrect! 😢 The correct song was: <span id="incorrect-song"></span>
+                        </div>
+                    </div>
+
+                    <!-- Game Over Section -->
+                    <div id="game-over" style="display:none;">
+                        <h3>Game Over!</h3>
+                        <p>Your Final Score: <span id="final-score"></span></p>
+                        <button id="restart-game" class="btn btn-primary">
+                            Play Again
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Game Instructions -->
+                <div class="card-footer text-muted">
+                    <p>
+                        🎵 Listen to the song snippet and guess the title! 
+                        You have 30 seconds to guess each song.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Game Logic Placeholder
+    document.addEventListener('DOMContentLoaded', function() {
+        const playSnippetBtn = document.getElementById('play-snippet');
+        const songSnippet = document.getElementById('song-snippet');
+        const guessForm = document.getElementById('guess-form');
+        const songGuessInput = document.getElementById('song-guess');
+        const scoreDisplay = document.getElementById('score');
+        const timerDisplay = document.getElementById('timer');
+        const resultArea = document.getElementById('result-area');
+        const correctResult = document.getElementById('correct-result');
+        const incorrectResult = document.getElementById('incorrect-result');
+        const gameOverSection = document.getElementById('game-over');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const restartGameBtn = document.getElementById('restart-game');
+
+        // Placeholder for actual game initialization
+        function initializeGame() {
+            // TODO: Implement game start logic
+            console.log('Game initialized');
+        }
+
+        // Placeholder for playing song snippet
+        playSnippetBtn.addEventListener('click', function() {
+            // TODO: Fetch and play actual song snippet from Spotify
+            console.log('Playing song snippet');
+        });
+
+        // Guess submission handler
+        guessForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // TODO: Validate guess against correct song
+            console.log('Guess submitted:', songGuessInput.value);
+        });
+
+        // Restart game functionality
+        restartGameBtn.addEventListener('click', initializeGame);
+
+        // Initialize game on page load
+        initializeGame();
+    });
+</script>
+{% endblock %}
