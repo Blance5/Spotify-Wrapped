@@ -5,7 +5,7 @@ from allauth.account.views import LogoutView
 from django.views.generic import TemplateView
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from .spotify_service import get_spotify_data
+from .spotify_service import get_spotify_data, get_spotify_dataShorten
 import requests
 from urllib.parse import urlencode
 from django.conf import settings
@@ -161,7 +161,19 @@ def wrapped_view(request):
         user_wrap = UserWrappedHistory(
             user_id=user_id,
             timeframe=term,  # Use the term that was selected by the user
-            generated_on=timezone.now()  # Store the current timestamp
+            generated_on=timezone.now(),  # Store the current timestamp
+
+            top_artists=top_artists,
+            recently_played=recently_played,
+            top_tracks=top_tracks,
+            playlists=playlists,
+            saved_albums=saved_albums,
+            top_track_popularity_score=top_track_popularity_score,
+            top_track_popularity_message=top_track_popularity_message,
+            top_genres=top_genres,
+            country=country,
+            image_url=image_url,
+            followers=followers
         )
         user_wrap.save()
 
@@ -197,7 +209,7 @@ def regenerate_past_wrap(request, wrap_id):
     # Regenerate wrapped data based on the saved timeframe
     term = wrap.timeframe  # This is the saved timeframe from the model
     try:
-        spotify_user_data = get_spotify_data(request, term)
+        spotify_user_data = get_spotify_dataShorten(request)
     except Exception as e:
         spotify_user_data = {
             'error': 'Unable to retrieve data from Spotify',
@@ -206,20 +218,19 @@ def regenerate_past_wrap(request, wrap_id):
         print("Error:", e)  # Debugging line
 
     # Extract data for rendering
-    top_artists = spotify_user_data.get('top_artists', [])
-    recently_played = spotify_user_data.get('recently_played', [])
-    top_tracks = spotify_user_data.get('top_tracks', [])
-    playlists = spotify_user_data.get('playlists', [])
-    saved_albums = spotify_user_data.get('saved_albums', [])
-    top_track_popularity_score = spotify_user_data.get('top_track_popularity_score', 0)
-    top_track_popularity_message = spotify_user_data.get('top_track_popularity_message',
-                                                         'Popularity score not available')
-    top_genres = spotify_user_data.get('top_genres', [])
-    profile_data = spotify_user_data["profile"]
-    country = profile_data.get("country", "Unknown")
-    image_url = profile_data.get("image_url", "/static/default_pfp.png")
-    followers = profile_data.get("followers", 0)
-    user_id = profile_data.get("id", "Unknown")
+    top_artists = wrap.top_artists
+    recently_played = wrap.recently_played
+    top_tracks = wrap.top_tracks
+    playlists = wrap.playlists
+    saved_albums = wrap.saved_albums
+    top_track_popularity_score = wrap.top_track_popularity_score
+    top_track_popularity_message = wrap.top_track_popularity_message
+
+    top_genres = wrap.top_genres
+    country = wrap.country
+    image_url = wrap.image_url
+    followers = wrap.followers
+    user_id = wrap.user_id
 
     return render(request, 'wrapped.html', {
         'spotify_user_data': spotify_user_data,
@@ -250,7 +261,7 @@ def profile_view(request):
 
     try:
         # Retrieve Spotify user data
-        spotify_user_data = get_spotify_data(request, "long_term")
+        spotify_user_data = get_spotify_dataShorten(request)
         
         # Extract profile data
         profile_data = spotify_user_data.get("profile", {})
@@ -269,12 +280,6 @@ def profile_view(request):
         }
         past_wraps = []
 
-    # Safely extract data with default empty lists
-    top_artists = spotify_user_data.get('top_artists', [])
-    recently_played = spotify_user_data.get('recently_played', [])
-    top_tracks = spotify_user_data.get('top_tracks', [])
-    playlists = spotify_user_data.get('playlists', [])
-    saved_albums = spotify_user_data.get('saved_albums', [])
 
     # Logging for debugging (remove in production)
     print(f"Spotify User ID: {spotify_user_id}")
@@ -282,11 +287,6 @@ def profile_view(request):
 
     return render(request, 'profile.html', {
         'spotify_user_data': spotify_user_data,
-        'top_artists': top_artists,
-        'recently_played': recently_played,
-        'top_tracks': top_tracks,
-        'playlists': playlists,
-        'saved_albums': saved_albums,
         'past_wraps': past_wraps,
     })
 
