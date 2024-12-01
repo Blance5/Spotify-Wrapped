@@ -1,1 +1,1 @@
-web: gunicorn Wrapped_Proj.Wrapped_Proj.wsgi
+web: cd Wrapped_Proj && gunicorn Wrapped_Proj.wsgi:application
