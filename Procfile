@@ -1,0 +1,1 @@
+web: gunicorn Wrapped_Proj.wsgi
