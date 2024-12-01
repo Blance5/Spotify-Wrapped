@@ -23,8 +23,10 @@ from .models import UserWrappedHistory  # Assuming you're saving the timeframes 
 from Wrapped.models import UserWrappedHistory
 from django.contrib import messages
 
+from django.contrib.sites.shortcuts import get_current_site
 
-from django.db.models import Q #delete later?
+
+from django.db.models import Q
 
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
@@ -316,7 +318,7 @@ def profile_view(request):
         spotify_user_id = profile_data.get("id", "Unknown")
 
         # Fetch past wraps, ensuring they match the current Spotify user ID
-        past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')[:12]
+        past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')
 
     except Exception as e:
         # Comprehensive error handling
@@ -328,10 +330,12 @@ def profile_view(request):
         }
         past_wraps = []
 
+    search_query = request.GET.get('search', '').strip()
+    if search_query:
+        past_wraps = past_wraps.filter(
+            Q(display_name__icontains=search_query)
+        )
 
-    # Logging for debugging (remove in production)
-    print(f"Spotify User ID: {spotify_user_id}")
-    print(f"Past Wraps Count: {len(past_wraps)}")
 
     return render(request, 'profile.html', {
         'spotify_user_data': spotify_user_data,
