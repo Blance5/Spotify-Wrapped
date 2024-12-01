@@ -4,8 +4,8 @@ blinker==1.4
 certifi==2024.8.30
 charset-normalizer==3.3.2
 cryptography==3.4.8
-dbus-python==1.2.18
-decouple==0.0.7
+#dbus-python==1.2.18
+#decouple==0.0.7
 distro==1.7.0
 Django==5.1
 django-allauth==64.2.1
