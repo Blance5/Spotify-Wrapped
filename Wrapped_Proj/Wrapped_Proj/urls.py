@@ -21,5 +21,8 @@ if settings.DEBUG:
         path('__debug__/', include(debug_toolbar.urls)),
     ]
 
+if not settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
 # Serve static files during development
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
