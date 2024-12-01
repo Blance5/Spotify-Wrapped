@@ -259,5 +259,52 @@ def get_spotify_data(request, term):
 
     return data
 
+# only retires part of the data
+def get_spotify_dataShorten(request):
+    access_token = request.session.get('spotify_token')
+    if not access_token:
+        print("Access token is missing or invalid.")
+        return {"error": "Access token missing or invalid"}
+
+    headers = {"Authorization": f"Bearer {access_token}"}
+    data = {}
+
+    # Fetch Spotify user profile
+    try:
+        profile_response = requests.get(
+            "https://api.spotify.com/v1/me",
+            headers=headers
+        )
+        profile_response.raise_for_status()
+        profile_data = profile_response.json()
+
+        print("PRIFLE DATA::", profile_data)
+
+        # Extract profile details
+        image_url = ""
+        if profile_data.get("images"):
+            # If 'images' is not empty, get the URL of the first image
+
+            image_url = profile_data["images"][0].get("url", "")
+
+        if not image_url:
+            image_url = static('default_pfp.png')  # Use the default profile image
+
+        # Now add the image_url to the profile data
+        data["profile"] = {
+            "display_name": profile_data.get("display_name", "Unknown User"),
+            "email": profile_data.get("email", "No email provided"),
+            "followers": profile_data.get("followers", {}).get("total", 0),
+            "country": profile_data.get("country", "Unknown"),
+            "image_url": image_url,  # Safely assigned image URL
+            "id": profile_data.get("id", "Unknown")
+        }
+
+    except Exception as e:
+        print("\n\n\n\n\n\n\n\nError fetching profile data:", str(e))
+        data["profile"] = {"display_name": "Unknown User", "email": "No email provided"}
+
+    return data
+
 
 
