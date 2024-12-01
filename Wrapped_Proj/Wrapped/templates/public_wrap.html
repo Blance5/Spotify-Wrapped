@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Public Wraps{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 pb-5 pt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h2 class="card-title display-6 mb-3 d-inline-block">
+                                Public Wraps
+                            </h2>
+                        </div>
+                    </div>
+                    
+                    
+                    <div>
+                            <form method="get" class="d-flex">
+                                <input 
+                                    type="search" 
+                                    name="search" 
+                                    class="form-control me-2" 
+                                    placeholder="Search by creator or display name" 
+                                    value="{{ request.GET.search }}"
+                                >
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </form>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+    {% if request.GET.search %}
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="alert alert-info">
+                Showing results for: <strong>{{ request.GET.search }}</strong>
+                <a href="{% url 'public_wrap' %}" class="btn btn-sm btn-outline-secondary ms-2">
+                    Clear Search
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    
+    <div class="row" style="padding: 15px;">
+        <div class="col-12">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                {% for wrap in public_wraps %}
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm hover-lift wrap-card">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="card-title mb-0">
+                                        {{ wrap.display_name|default:wrap.timeframe|title }}
+                                    </h4>
+                                    <span class="badge">
+                                        {{ wrap.get_timeframe_display|upper }}
+                                    </span>
+                                </div>
+                                
+                                <p class="card-text small">
+                                    <strong>Creator:</strong> 
+                                    {{ wrap.creator_name}}
+                                </p>
+                                
+                                <p class="card-text small">
+                                    <strong>Generated:</strong> 
+                                    {{ wrap.generated_on|date:"F j, Y" }}
+                                </p>
+                                <div class="mt-auto d-flex justify-content-between">
+                                    <a href="{% url 'others_wrapped' wrap.wrap_id %}" class="btn btn-success">
+                                        <i class="bi bi-arrow-repeat me-2"></i> Display Wrapped
+                                    </a>
+                                    
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="alert alert-info text-center" role="alert">
+                            <i class="bi bi-inbox me-2"></i> No public wraps available
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

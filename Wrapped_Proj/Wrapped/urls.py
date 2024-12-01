@@ -10,6 +10,7 @@ urlpatterns = [
     path('wrapped/', views.wrapped_view, name='wrapped'),
     path('wrapped/regenerate/<int:wrap_id>/', views.regenerate_past_wrap, name='regenerate_past_wrap'),
     # Regenerate past wrap
+    path('wrapped/others/<int:wrap_id>/', views.others_wrapped, name='others_wrapped'),
     path('home_logged_in/', views.home_logged_in, name='home_logged_in'),  # Logged-in view
     path('home_logged_out/', views.home_logged_out, name='home_logged_out'),  # Logged-out view
     # path('accounts/', include('allauth.urls')),  # Include allauth URLs for authentication
@@ -19,11 +20,11 @@ urlpatterns = [
     path('', views.home_redirect, name='home_redirect'),  # Home page view
     path('contact/', views.contact, name='contact'),
     path('delete_wrap/<int:wrap_id>/', views.delete_wrap, name='delete_wrap'),
+    path('make_public/<int:wrap_id>/', views.make_public, name='make_public'),
     path('rename_wrap/<int:wrap_id>/', views.rename_wrap, name='rename_wrap'),
     path('delete_account/', views.delete_account, name='delete_account'),
     path('game/', views.game_view, name='game'),
-
-
+    path('public_wrap/', views.public_wrap, name='public_wrap'),
 ]
 
 # Optionally include debug toolbar routes during development
