@@ -1,1 +1,1 @@
-web: gunicorn Wrapped_Proj.wsgi
+web: gunicorn Wrapped_Proj.Wrapped_Proj.wsgi
