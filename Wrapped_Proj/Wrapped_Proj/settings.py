@@ -18,7 +18,7 @@ from decouple import config
 SPOTIFY_CLIENT_ID = config('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = config('SPOTIFY_CLIENT_SECRET')
 SECRET_KEY = config('SECRET_KEY')
-SPOTIFY_REDIRECT_URI = 'http://127.0.0.1:8000/spotify/callback/'
+SPOTIFY_REDIRECT_URI = 'https://wrapify.org/spotify/callback/'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -41,7 +41,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', 'wrapped2340-b65007b008d9.herokuapp.com']
 
 
 # Application definition
@@ -59,7 +59,13 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'debug_toolbar',
+]
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://wrapify.org',
+    'https://www.wrapify.org',
+    'https://wrapped2340-b65007b008d9.herokuapp.com',
 ]
 
 # Ensure email is required
@@ -97,9 +103,11 @@ LOGOUT_REDIRECT_URL = 'home_redirect'
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Ensure this path points to your "static" folder
-]
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -115,12 +123,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 
 INTERNAL_IPS = [
     '127.0.0.1',
+]
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # Your custom static files location
 ]
 
 

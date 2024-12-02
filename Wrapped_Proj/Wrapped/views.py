@@ -24,15 +24,17 @@ from Wrapped.models import UserWrappedHistory
 from django.contrib import messages
 from django.urls import reverse
 
+from django.contrib.sites.shortcuts import get_current_site
 
-from django.db.models import Q #delete later?
+
+from django.db.models import Q
 
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
 SPOTIFY_CLIENT_ID = config('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = config('SPOTIFY_CLIENT_SECRET')
-SPOTIFY_REDIRECT_URI = "http://127.0.0.1:8000/spotify/callback/"
+SPOTIFY_REDIRECT_URI = "https://wrapify.org/spotify/callback/"
 SPOTIFY_USER_PROFILE_URL = "https://api.spotify.com/v1/me"
 SCOPES = "user-top-read playlist-read-private user-library-read user-read-email user-read-private"
 
@@ -320,7 +322,7 @@ def profile_view(request):
         spotify_user_id = profile_data.get("id", "Unknown")
 
         # Fetch past wraps, ensuring they match the current Spotify user ID
-        past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')[:12]
+        past_wraps = UserWrappedHistory.objects.filter(user_id=spotify_user_id).order_by('-generated_on')
 
     except Exception as e:
         # Comprehensive error handling
@@ -332,10 +334,12 @@ def profile_view(request):
         }
         past_wraps = []
 
+    search_query = request.GET.get('search', '').strip()
+    if search_query:
+        past_wraps = past_wraps.filter(
+            Q(display_name__icontains=search_query)
+        )
 
-    # Logging for debugging (remove in production)
-    print(f"Spotify User ID: {spotify_user_id}")
-    print(f"Past Wraps Count: {len(past_wraps)}")
 
     return render(request, 'profile.html', {
         'spotify_user_data': spotify_user_data,
