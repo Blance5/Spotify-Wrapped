@@ -61,13 +61,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 ]
 
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://wrapify.org',
-    'https://www.wrapify.org',
-    'https://wrapped2340-b65007b008d9.herokuapp.com',
-]
-
 # Ensure email is required
 ACCOUNT_EMAIL_REQUIRED = True
 
