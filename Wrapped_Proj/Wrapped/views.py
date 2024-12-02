@@ -374,7 +374,7 @@ def contact(request):
                 recipient_email = getattr(settings, 'EMAIL_HOST_USER', 'wrappeddevs@gmail.com')  # Fallback email
                 send_mail(
                     subject=f"Contact Form Submission from {name}",
-                    message=message,
+                    message="from:  " + email + " Message: " + message,
                     from_email=email,
                     recipient_list=[recipient_email],
                     fail_silently=False,
