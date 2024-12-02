@@ -39,7 +39,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*', 'wrapped2340-b65007b008d9.herokuapp.com']
 
@@ -100,6 +100,12 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://wrapify.org',
+    'https://www.wrapify.org',
+    'https://wrapped2340-b65007b008d9.herokuapp.com',
+]
 
 
 AUTHENTICATION_BACKENDS = (
